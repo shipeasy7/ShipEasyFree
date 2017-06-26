@@ -1,0 +1,126 @@
+{% extends 'home.html' %}
+{% load staticfiles %}
+{% block contain %}
+            <section id="content">
+
+                <div class="page page-forms-wizard">
+
+                    <div class="pageheader">
+
+                        <h2>Add Truck<span>// You can place subtitle here</span></h2>
+
+                        <div class="page-bar">
+
+                            <ul class="page-breadcrumb">
+                                <li>
+                                    <a href="index.html"><i class="fa fa-home"></i> Ship Easy</a>
+                                </li>
+                                <li>
+                                    <a href="#">Add Truck One/Three</a>
+                                </li>
+                                <li>
+                                    <a href="#">Add Truck Two/Three</a>
+                                </li>
+                            </ul>
+
+                        </div>
+
+                            <form name="form1" role="form" id="form1" action="/truck/add_truck_two_process/" method="post" enctype="multipart/form-data">{% csrf_token %}
+                                <div class="row">
+                                    <div hidden><input type="text" name="id" value="{{ truck_id }}"></div>
+                                    <div hidden><input type="text" name="update_id" value="{{ truck_obj.id }}"></div>
+
+                                    <div class="form-group col-md-4">
+                                         <label for="username">Truck Type:</label>
+                                                <select name="truck_type" class="form-control mb-10"
+                                                        data-parsley-trigger="change"
+                                                        required>
+                                                    <option value="{{ truck_obj.truck_type }}">{{ truck_obj.truck_type }}</option>
+                                                    <option value="foo">Foo</option>
+                                                    <option value="bar">Bar</option>
+                                                </select>
+                                                </div>
+
+                                    <div class="form-group col-md-4">
+                                         <label for="username">Capacity:</label>
+                                                <select name="truck_capacity" class="form-control mb-10"
+                                                        data-parsley-trigger="change"
+                                                        required>
+                                                    <option value="{{ truck_obj.truck_capacity }}">{{ truck_obj.truck_capacity }}</option>
+                                                    <option value="foo">Foo</option>
+                                                    <option value="bar">Bar</option>
+                                                </select>
+                                                </div>
+                                    <div class="form-group col-md-4">
+                                     <label for="username">Length:</label>
+                                                <select name="truck_length" class="form-control mb-10"
+                                                        data-parsley-trigger="change"
+                                                        required>
+                                                    <option value="{{ truck_obj.truck_lemgth }}">{{ truck_obj.truck_lemgth }}</option>
+                                                    <option value="foo">Foo</option>
+                                                    <option value="bar">Bar</option>
+                                                </select>
+                                                </div>
+                                            </div>
+
+                                        <div class="row">
+
+
+                                        <div class="form-group col-md-4">
+                                            <label for="username">Mobile Number:</label>
+                                            <input type="text" name="mobile_number" id="mobile_number" class="form-control"
+                                             pattern={10}" onchange="unique_number()", value="{{ truck_obj.mobile_number }}"
+                                                   required/>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                         <label for="username">Operator</label>
+                                                <select name="operator" class="form-control mb-10"
+                                                        data-parsley-trigger="change"
+                                                        required>
+                                                    <option value="{{ truck_obj.operator }}">{{ truck_obj.operator }}</option>
+                                                    <option value="Airtel">Airtel</option>
+                                                    <option value="Idea">IDEA</option>
+                                                    <option value="vodaphone">Vodaphone</option>
+                                                </select>
+                                                </div>
+
+
+                                            </div>
+
+
+{#                                        <div class="form-group">#}
+{#                                            <label for="phone">Phone: </label>#}
+{#                                            <input type="text" name="phone" id="phone" class="form-control" placeholder="(XXX) XXXX XXX"#}
+{#                                                   data-parsley-trigger="change"#}
+{#                                                   pattern="^[\d\+\-\.\(\)\/\s]*$"#}
+{#                                                   required>#}
+{#                                        </div>#}
+{##}
+{#                                        <div class="checkbox">#}
+{#                                            <label class="checkbox checkbox-custom">#}
+{#                                                <input type="checkbox" name="agree" id="agree"#}
+{#                                                       data-parsley-trigger="change"#}
+{#                                                       required>#}
+{#                                                <i></i> I agree to the <a href class="text-info">Terms of Service</a>#}
+{#                                            </label>#}
+{#                                        </div>#}
+
+{#                                <input type="submit" value="next">#}
+<div class="row", align="center" style="align-content: center">
+<input type="submit" class="btn btn-success" id="form1Submit" value="Next"></input>
+</div>
+
+                        </form>
+
+                    </div>
+                        </div>
+
+                    </div>
+                    <!-- /page content -->
+
+                </div>
+
+            </section>
+            <!--/ CONTENT -->
+
+{% endblock %}

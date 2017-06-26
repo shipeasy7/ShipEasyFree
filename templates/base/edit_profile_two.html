@@ -1,0 +1,94 @@
+{% extends 'home.html' %}
+{% load staticfiles %}
+{% block contain %}
+
+<section id="content">
+
+                <div class="page page-forms-wizard">
+
+                    <div class="pageheader">
+
+                        <h2>Edit Profile<span>// You can place subtitle here</span></h2>
+
+                        <div class="page-bar">
+
+                            <ul class="page-breadcrumb">
+                                <li>
+                                    <a href="index.html"><i class="fa fa-home"></i> Ship Easy</a>
+                                </li>
+                                <li>
+                                    <a href="#">Edit profile One/Three</a>
+                                </li>
+                                <li>
+                                    <a href="#">Edit profile Two/Three</a>
+                                </li>
+                            </ul>
+
+                        </div>
+
+                            <form name="form1" role="form" id="form1" action="/base/edit_profile_two_process/" method="post" enctype="multipart/form-data">{% csrf_token %}
+                                        <div class="row">
+                                        <div class="form-group col-md-6">
+                                            <label for="username">Address:</label>
+                                            <input type="text" name="address" id="address" class="form-control"
+                                          />
+                                        </div>
+
+                                        <div class="form-group col-md-6">
+                                            <label>Landline: </label>
+                                            <input type="text" name="landline" id="landline" class="form-control"
+                                                   data-parsley-trigger="change",
+                                                   required>
+                                        </div>
+                                    </div>
+
+
+
+{#                                        <div class="form-group">#}
+{#                                            <label for="phone">Phone: </label>#}
+{#                                            <input type="text" name="phone" id="phone" class="form-control" placeholder="(XXX) XXXX XXX"#}
+{#                                                   data-parsley-trigger="change"#}
+{#                                                   pattern="^[\d\+\-\.\(\)\/\s]*$"#}
+{#                                                   required>#}
+{#                                        </div>#}
+{##}
+{#                                        <div class="checkbox">#}
+{#                                            <label class="checkbox checkbox-custom">#}
+{#                                                <input type="checkbox" name="agree" id="agree"#}
+{#                                                       data-parsley-trigger="change"#}
+{#                                                       required>#}
+{#                                                <i></i> I agree to the <a href class="text-info">Terms of Service</a>#}
+{#                                            </label>#}
+{#                                        </div>#}
+
+                                <input type="submit" value="next">
+
+
+                        </form>
+
+                    </div>
+                        </div>
+
+                    </div>
+                    <!-- /page content -->
+
+                </div>
+
+            </section>
+            <!--/ CONTENT -->
+{% endblock %}
+
+{% block scripts %}
+{#Google Direct Fetch Address#}
+<script>
+
+            function init() {
+                var input = document.getElementById('address');
+                var autocomplete = new google.maps.places.Autocomplete(input);
+            }
+
+            google.maps.event.addDomListener(window, 'load', init);
+
+
+</script>
+{% endblock %}

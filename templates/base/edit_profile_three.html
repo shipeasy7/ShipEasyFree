@@ -1,0 +1,99 @@
+{% extends 'home.html' %}
+{% load staticfiles %}
+{% block contain %}
+
+<section id="content">
+
+                <div class="page page-forms-wizard">
+
+                    <div class="pageheader">
+
+                        <h2>Edit Profile<span>// You can place subtitle here</span></h2>
+
+                        <div class="page-bar">
+
+                            <ul class="page-breadcrumb">
+                                <li>
+                                    <a href="index.html"><i class="fa fa-home"></i> Ship Easy</a>
+                                </li>
+                                <li>
+                                    <a href="#">Edit Profile One/Three</a>
+                                </li>
+                                <li>
+                                    <a href="#">Edit Profile Two/Three</a>
+                                </li>
+                                  <li>
+                                    <a href="#">Edit Profile Three</a>
+                                </li>
+                            </ul>
+
+                        </div>
+
+                            <form name="form1" role="form" id="form1" action="/base/edit_profile_three_process/" method="post" enctype="multipart/form-data">{% csrf_token %}
+                                <div class="row">
+                                        <div class="form-group col-md-6">
+                                            <label for="username">Owener Name</label>
+                                            <input type="text" name="owener_name" id="owener_name" class="form-control"
+                                                   data-parsley-trigger="change"
+                                                   data-parsley-range="[4, 20]",
+                                                   required>
+                                        </div>
+
+                                        <div class="form-group col-md-6">
+                                            <label>Designation: </label>
+                                            <input type="text" name="designation" id="designation" class="form-control"
+                                                   data-parsley-trigger="change",
+                                                   required>
+                                        </div>
+                                    </div>
+                                <div class="row">
+                                <div class="form-group col-md-6">
+                                            <label>Mobile Number: </label>
+                                            <input type="text" name="mobile_number" id="mobile_number" class="form-control"
+                                                   value="{{ user_obj.mobile_number }}" data-parsley-trigger="change",
+                                                   required>
+                                        </div>
+                                <div class="form-group col-md-6">
+                                            <label>Email: </label>
+                                            <input type="text" name="email" id="email" class="form-control"
+                                                   data-parsley-trigger="change", value="{{ user_obj.email }}"
+                                                   required>
+                                        </div>
+                                    </div>
+
+
+
+
+{#                                        <div class="form-group">#}
+{#                                            <label for="phone">Phone: </label>#}
+{#                                            <input type="text" name="phone" id="phone" class="form-control" placeholder="(XXX) XXXX XXX"#}
+{#                                                   data-parsley-trigger="change"#}
+{#                                                   pattern="^[\d\+\-\.\(\)\/\s]*$"#}
+{#                                                   required>#}
+{#                                        </div>#}
+{##}
+{#                                        <div class="checkbox">#}
+{#                                            <label class="checkbox checkbox-custom">#}
+{#                                                <input type="checkbox" name="agree" id="agree"#}
+{#                                                       data-parsley-trigger="change"#}
+{#                                                       required>#}
+{#                                                <i></i> I agree to the <a href class="text-info">Terms of Service</a>#}
+{#                                            </label>#}
+{#                                        </div>#}
+
+                                <input type="submit" value="next">
+
+
+                        </form>
+
+                    </div>
+                        </div>
+
+                    </div>
+                    <!-- /page content -->
+
+                </div>
+
+            </section>
+            <!--/ CONTENT -->
+{% endblock %}

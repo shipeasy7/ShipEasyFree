@@ -1,0 +1,227 @@
+{% extends 'home.html' %}
+{% load staticfiles %}
+{% block contain %}
+            <section id="content">
+
+                <div class="page page-forms-wizard">
+
+                    <div class="pageheader">
+
+                        <h2>Enter truck Or Driber Licen</h2>
+
+                        <div class="page-bar">
+
+                            <ul class="page-breadcrumb">
+                                <li>
+                                    <a href="#"><i class="fa fa-home"></i> ShipEasy</a>
+                                </li>
+                                <li>
+                                    <a href="#">Select Truck/driver</a>
+                                </li>
+{#                                <li>#}
+{#                                    <a href="form-wizard.html">Form Wizard</a>#}
+{#                                </li>#}
+                            </ul>
+
+                        </div>
+
+                            <form name="form1" role="form" id="form1" action="/gps/print_form/" method="post" enctype="multipart/form-data">{% csrf_token %}
+                                <div class="row">
+                                    <div hidden><input type="text" name="id" value="{{ id }}"></div>
+
+                                            <div class="form-group col-md-4" id = "truck_id_div">
+                                            <label for="username">Enter Truck licen(autofill)</label>
+                                          <input id="tags" type="text" name="truck"  class="form-control"
+                                                  onchange="onAssociateChange()"
+                                                   />
+
+                                        </div>
+                                    <div class="form-group col-md-4" id = truck_drive_div>
+                                            <label for="username">Enter Driver Licen(Autofill)</label>
+                                            <input id="driver" type="text" name="driver" class="form-control"
+                                                    onchange="onDriverChange()"
+                                                   />
+
+                                        </div>
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="form-group col-md-4">
+                                            <label for="username">Mobile Number</label>
+                                            <input id="mobile_number" type="mobile_number" name="mobile_number"  class="form-control"
+                                                   data-parsley-trigger="change"
+                                                   data-parsley-range="[4, 20]",
+                                                   >
+
+                                        </div>
+                                    <div class="form-group col-md-4">
+                                            <label for="username">Operator</label>
+                                            <input id="operator" type="operator" name="operator"  class="form-control"
+                                                   data-parsley-trigger="change"
+                                                   data-parsley-range="[4, 20]",
+                                                   >
+
+                                        </div>
+                                </div>
+
+
+
+{#            <div class="form-row">#}
+{#                <label>#}
+{#                    <span>Birth Date</span>#}
+{#                    <input type="text" name="dob" id="datepicker"  required>#}
+{#                </label>#}
+{#            </div>#}
+
+
+
+{#                                        <div class="form-group">#}
+{#                                            <label for="phone">Phone: </label>#}
+{#                                            <input type="text" name="phone" id="phone" class="form-control" placeholder="(XXX) XXXX XXX"#}
+{#                                                   data-parsley-trigger="change"#}
+{#                                                   pattern="^[\d\+\-\.\(\)\/\s]*$"#}
+{#                                                   required>#}
+{#                                        </div>#}
+{##}
+{#                                        <div class="checkbox">#}
+{#                                            <label class="checkbox checkbox-custom">#}
+{#                                                <input type="checkbox" name="agree" id="agree"#}
+{#                                                       data-parsley-trigger="change"#}
+{#                                                       required>#}
+{#                                                <i></i> I agree to the <a href class="text-info">Terms of Service</a>#}
+{#                                            </label>#}
+{#                                        </div>#}
+
+{#                                <input type="submit" value="next">#}
+<div class="row", align="center" style="align-content: center">
+<input type="submit" class="btn btn-success" id="form1Submit" value="Next"></input>
+</div>
+
+                        </form>
+
+                    </div>
+                        </div>
+
+                    </div>
+                    <!-- /page content -->
+
+                </div>
+
+            </section>
+            <!--/ CONTENT -->
+
+
+{% endblock %}
+
+{% block scripts %}
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+    <script>
+ $( function() {
+	$.getJSON("/truck/all_truck/", function(data) {
+		autoComplete = [];
+		for (var i = 0, len = data.length; i < len; i++) {
+			autoComplete.push(data[i].licanse_number);
+		}
+		$( "#tags" ).autocomplete({
+			source: autoComplete
+		});
+
+	});
+});
+  </script>
+
+
+      <script>
+ $( function() {
+     $.getJSON("/driver/all_driver/", function (data) {
+         autoComplete = [];
+         for (var i = 0, len = data.length; i < len; i++) {
+             autoComplete.push(data[i].licen_number);
+         }
+         $("#driver").autocomplete({
+             source: autoComplete
+         });
+
+     });
+ });
+ </script>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+
+             });
+                function onAssociateChange() {
+                    {#                var x = document.getElementById("truck_id").value;#}
+                    var user_id = $('#tags').val();
+
+                    var relation = document.getElementById("truck_drive_div");
+
+                    if(user_id !== "")
+                    {
+                        relation.style.visibility = 'hidden';
+                    }
+
+                    $.ajax({
+                        type: 'GET',
+                        url: '/gps/truck_mobile_number/' + user_id,
+                        dataType: 'json',
+                        data: {paramVal: user_id},
+                        success: function (data) {
+
+
+                            $("#mobile_number").val(data[0]);
+                            $("#operator").val(data[1]);
+
+
+                        }
+                    });
+
+
+                }
+
+        </script>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+
+             });
+                function onDriverChange() {
+                    {#                var x = document.getElementById("truck_id").value;#}
+                    var user_id = $('#driver').val();
+
+                    var relation = document.getElementById("truck_id_div");
+
+                    if(user_id !== "")
+                    {
+                        relation.style.visibility = 'hidden';
+                    }
+
+                    $.ajax({
+                        type: 'GET',
+                        url: '/gps/driver_mobile_number/' + user_id,
+                        dataType: 'json',
+                        data: {paramVal: user_id},
+                        success: function (data) {
+
+
+                            $("#mobile_number").val(data[0]);
+                            $("#operator").val(data[1]);
+
+
+                        }
+                    });
+
+
+                }
+
+        </script>
+
+
+
+
+
+{% endblock %}

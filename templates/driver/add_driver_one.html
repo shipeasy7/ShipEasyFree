@@ -1,0 +1,167 @@
+{% extends 'home.html' %}
+{% load staticfiles %}
+{% block contain %}
+
+
+<section id="content">
+
+                <div class="page page-forms-wizard">
+
+                    <div class="pageheader">
+
+                        <h2>Add Driver<span></span></h2>
+
+                        <div class="page-bar">
+
+                            <ul class="page-breadcrumb">
+                                <li>
+                                    <a href="index.html"><i class="fa fa-home"></i> Ship Easy</a>
+                                </li>
+                                <li>
+                                    <a href="#">Add Driver one/two</a>
+                                </li>
+{#                                <li>#}
+{#                                    <a href="form-wizard.html">Form Wizard</a>#}
+{#                                </li>#}
+                            </ul>
+
+                        </div>
+
+                            <form name="form1" role="form" id="form1" action="/driver/add_driver_one_process/" method="post" enctype="multipart/form-data">{% csrf_token %}
+                                <div class="row">
+                                    <div hidden><input type="text" name="id" value="{{ driver_obj.id }}"></div>
+                                                <div class="form-group col-md-4">
+                                            <label for="username">Dates</label>
+                                            <input type="text" name="date" id="datepicker" class="form-control"
+                                                  value="{{ driver_obj.date }}"
+                                                   required>
+                                            </div>
+
+
+                                            <div class="form-group col-md-4">
+                                            <label for="username">Name:</label>
+                                            <input type="text" name="name" id="name" class="form-control"
+                                                    value="{{ driver_obj.driver_name }}"
+                                                   required>
+                                        </div>
+                                    <div class="form-group col-md-4">
+                                            <label for="username">Licen number:</label>
+                                            <input type="text" name="licen_number" id="licen_number" class="form-control"
+                                                    value="{{ driver_obj.licen_number }}"
+                                                   required>
+                                        </div>
+
+
+                                    <div class="form-group col-md-4">
+                                         <label for="username">Licen Type</label>
+                                                <select name="licen_type" class="form-control mb-10"
+                                                        data-parsley-trigger="change"
+                                                        required>
+                                                    <option value="{{ driver_obj.licaen_type }}">{{ driver_obj.licaen_type }}</option>
+                                                    <option value="foo">Foo</option>
+                                                    <option value="bar">Bar</option>
+                                                </select>
+                                                </div>
+                                </div>
+                                    <div class="row">
+                                        <div class="form-group col-md-4">
+                                            <label for="username">Mobile Number:</label>
+                                            <input type="text" name="mobile_number" id="mobile_number" class="form-control"
+                                                   pattern="[789][0-9]{9}" value="{{ driver_obj.mobile_number }}"
+                                                   required>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                         <label for="username">Operator</label>
+                                                <select name="operator" class="form-control mb-10"
+                                                        data-parsley-trigger="change"
+                                                        required>
+                                                    <option value="{{ driver_obj.operator }}">{{ driver_obj.operator }}</option>
+                                                    <option value="Artel">Artel</option>
+                                                    <option value="Idea">Idea</option>
+                                                </select>
+                                                </div>
+                                    </div>
+                                        <div class="row">
+                                            <div class="form-group col-md-3">
+                                                <label for="passwordConfirm">Pan Upload: </label>
+                                                <input type="file" name="file1" id="pan_upload" class="form-control"
+                                                       data-parsley-trigger="change"
+                                                       data-parsley-range="[4, 20]"
+                                                       data-parsley-equalto="#password"
+                                                       required>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="passwordConfirm">Adhar upload: </label>
+                                                <input type="file" name="file2" id="fitnes" class="form-control"
+                                                       data-parsley-trigger="change"
+                                                       data-parsley-range="[4, 20]"
+                                                       data-parsley-equalto="#password"
+                                                       required>
+                                            </div>
+
+{#            <div class="form-row">#}
+{#                <label>#}
+{#                    <span>Birth Date</span>#}
+{#                    <input type="text" name="dob" id="datepicker"  required>#}
+{#                </label>#}
+{#            </div>#}
+                                            </div>
+
+
+{#                                        <div class="form-group">#}
+{#                                            <label for="phone">Phone: </label>#}
+{#                                            <input type="text" name="phone" id="phone" class="form-control" placeholder="(XXX) XXXX XXX"#}
+{#                                                   data-parsley-trigger="change"#}
+{#                                                   pattern="^[\d\+\-\.\(\)\/\s]*$"#}
+{#                                                   required>#}
+{#                                        </div>#}
+{##}
+{#                                        <div class="checkbox">#}
+{#                                            <label class="checkbox checkbox-custom">#}
+{#                                                <input type="checkbox" name="agree" id="agree"#}
+{#                                                       data-parsley-trigger="change"#}
+{#                                                       required>#}
+{#                                                <i></i> I agree to the <a href class="text-info">Terms of Service</a>#}
+{#                                            </label>#}
+{#                                        </div>#}
+
+{#                                <input type="submit" value="next">#}
+<div class="row", align="center" style="align-content: center">
+<input type="submit" class="btn btn-success" id="form1Submit" value="Next"></input>
+</div>
+
+                        </form>
+
+                    </div>
+                        </div>
+
+                    </div>
+                    <!-- /page content -->
+
+                </div>
+
+            </section>
+            <!--/ CONTENT -->
+
+{% endblock %}
+{% block scripts %}
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+            <script>
+            $(window).load(function() {
+
+
+                $(function () {
+                    $("#datepicker").datepicker({
+
+                        minDate: 0,
+                        changeMonth: true,
+                        changeYear: true
+                    });
+                });
+            });
+</script>
+{% endblock %}

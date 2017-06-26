@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div id="print-content">
+<p>Date: {{ date }}</p><br>
+To,</br><br>
+<b>Bharti Airtel Limited</b><br>
+Bharti Crescent, 1,<br>
+Nelson Mandela Road,<br>
+Vasant Kunj, Phase II,<br>
+New Delhi – 110 070<br><br>
+<b>Sub.</b>: Authorization and Undertaking with reference to the activation of TraceMATE Services on mobile<br>
+no. {{ obj.mobile_number }}<br><br>
+Dear Sir,<br><br>
+I, {{ obj.owener_name }}{{ obj.driver_name }}, do hereby represent and warrant that I have a business relationship with ______<br>
+________________________<br><br>
+I {{ truck_obj.owener_name }} state that I have an airtel SIM card bearing mobile number {{ truck_obj.mobile_number }}(hereinafter<br>
+referred to as MSISDN number). I am fully aware that TraceMATE Services, a mobile application /<br>
+telecom enabled service which among other facilities enables all my movements to be traced / tracked,<br>
+has been activated on the same.<br><br>
+I hereby authorize Bharti Airtel Limited, its employees, authorized personnel, officers or nominees to do<br>
+or allow to do all or any of the acts, matters or things, for the purposes of providing the said<br>
+TraceMATE services and to trace and track the said MSISDN thereby my movements as well at all times,<br>
+extract, compile, maintain, records of my movements thereof or any information relating thereto, and<br>
+to furnish all such information pertaining to my movements by virtue of the said Tracing & Tracking<br>
+services. I hereby acknowledge, agree and warrant that Bharti Airtel Limited shall have all the<br>
+proprietary rights, interests and ownership in all or any information, data, reports, records.<br><br>
+I hereby categorically indemnify and undertake to hold harmless and defend Bharti Airtel Limited, its<br>
+affiliate, its directors, employees, officers against all claims arising out of or in relation to any breach of<br>
+any representation, warranty and/or an undertaking provided herein above, fraud, misrepresentation,<br>
+negligence and/or misconduct.<br><br>
+I hereby acknowledge and agree that Bharti Airtel Limited is not liable or responsible, either to me or to<br>
+my employer or to any other party, for any claims of whatsoever nature that may arise or relate to the<br>
+said TraceMATE services provided by Airtel.<br><br>
+Thanking You,<br><br><br>
+______________________<br><br>
+Date: {{ date }}<br>
+
+  <input type="button" onclick="printDiv('print-content')" value="print!"/>
+</div>
+{#<input type="button" value="Print this page" onClick="window.print()">#}
+
+
+<script type="text/javascript">
+
+function printDiv(divName) {
+
+ var printContents = document.getElementById(divName).innerHTML;
+ w=window.open();
+ w.document.write(printContents);
+ w.print();
+ w.close();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+{% extends 'home.html' %}
+{% load staticfiles %}
+{% block contain %}
+ <section id="content">
+
+                <div class="page page-forms-wizard">
+
+                    <div class="pageheader">
+
+                        <h2>Add Truck<span>// You can place subtitle here</span></h2>
+
+                        <div class="page-bar">
+
+                            <ul class="page-breadcrumb">
+                                <li>
+                                    <a href="index.html"><i class="fa fa-home"></i> Ship Easy</a>
+                                </li>
+                                <li>
+                                    <a href="#">Add Truck One/Three</a>
+                                </li>
+{#                                <li>#}
+{#                                    <a href="form-wizard.html">Form Wizard</a>#}
+{#                                </li>#}
+                            </ul>
+
+                        </div>
+
+                            <form name="form1" role="form" id="form1" action="/truck/add_truck_one_process/" method="post" enctype="multipart/form-data">{% csrf_token %}
+                                <div class="row">
+                                        <div class="form-group col-md-6">
+                                            <input type="text" id = id , name="id", value="{{truck_obj.id}}" hidden>
+                                            <label for="username">Licanse Number </label>
+                                            <input type="text" name="licanse_number" id="licanse_numbers" class="form-control"
+
+                                                   onchange="unique_number()" value="{{ truck_obj.licanse_number }}"
+                                                   required>
+                                        </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="passwordConfirm">Licanse Upload: </label>
+                                                <input type="file" name="file1" id="licanse_upload" class="form-control"
+                                                       required/>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="passwordConfirm">ROC upload: </label>
+                                                <input type="file" name="file2" id="roc" class="form-control"
+                                                       data-parsley-trigger="change"
+                                                       data-parsley-range="[4, 20]"
+                                                       data-parsley-equalto="#password"
+                                                       required>
+                                            </div>
+                                </div>
+                                        <div class="row">
+
+
+                                        <div class="form-group col-md-4">
+                                            <label for="username">Truck OEM </label>
+                                            <input type="text" name="truck_oem" id="truck_oem" class="form-control"
+                                                   data-parsley-trigger="change"
+                                                   data-parsley-range="[4, 20]", value="{{ truck_obj.truck_oem }}"
+                                                   required>
+                                        </div>
+                                         <div class="form-group col-md-4">
+                                            <label for="username">Truck Model</label>
+                                            <input type="text" name="truck_model" id="truck_model" class="form-control"
+                                                   data-parsley-trigger="change"
+                                                   data-parsley-range="[4, 20]", value="{{truck_obj.model}}"
+                                                   required>
+                                         </div>
+                                            <div class="form-group col-md-4">
+                                            <label for="username">wheels </label>
+                                            <input type="text" name="wheels" id="wheels" class="form-control"
+                                                   data-parsley-trigger="change"
+                                                   data-parsley-range="[4, 20]", value="{{ truck_obj.wheels }}"
+                                                   required>
+                                            </div>
+
+
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-md-4">
+
+                                            <label for="username">Axel Type </label>
+
+                                                <select name="axle_type" class="form-control mb-10"
+                                                        data-parsley-trigger="change"
+                                                        required>
+                                                    <option value="{{ truck_obj.axle_type }}">{{ truck_obj.axle_type }}</option>
+                                                    <option value="foo">Foo</option>
+                                                    <option value="bar">Bar</option>
+                                                </select>
+                                                </div>
+
+                                                <div class="form-group col-md-4">
+{#                                                                                                <label for="username">wheels </label>#}
+                                            <label for="username">Truck Type </label>
+
+                                                <select name="type" class="form-control mb-10"
+                                                        data-parsley-trigger="change"
+                                                        required>
+                                                    <option value="{{ truck_obj.truck_type }}">{{ truck_obj.truck_type }}</option>
+                                                    <option value="foo">Foo</option>
+                                                    <option value="bar">Bar</option>
+                                                </select>
+                                                </div>
+
+                                            </div>
+
+
+{#                                        <div class="form-group">#}
+{#                                            <label for="phone">Phone: </label>#}
+{#                                            <input type="text" name="phone" id="phone" class="form-control" placeholder="(XXX) XXXX XXX"#}
+{#                                                   data-parsley-trigger="change"#}
+{#                                                   pattern="^[\d\+\-\.\(\)\/\s]*$"#}
+{#                                                   required>#}
+{#                                        </div>#}
+{##}
+{#                                        <div class="checkbox">#}
+{#                                            <label class="checkbox checkbox-custom">#}
+{#                                                <input type="checkbox" name="agree" id="agree"#}
+{#                                                       data-parsley-trigger="change"#}
+{#                                                       required>#}
+{#                                                <i></i> I agree to the <a href class="text-info">Terms of Service</a>#}
+{#                                            </label>#}
+{#                                        </div>#}
+
+{#                                <input type="submit" value="next">#}
+<div class="row", align="center" style="align-content: center">
+<input type="submit" class="btn btn-success" id="form1Submit" value="Next"></input>
+</div>
+
+                        </form>
+
+                    </div>
+                        </div>
+
+                    </div>
+                    <!-- /page content -->
+
+                </div>
+
+            </section>
+            <!--/ CONTENT -->
+{% endblock %}

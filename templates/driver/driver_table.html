@@ -1,0 +1,261 @@
+{% extends 'home.html' %}
+{% load staticfiles %}
+{% block contain %}
+
+<section id="content">
+
+                <div class="page page-tables-datatables">
+
+                    <div class="pageheader">
+
+                        <h2>All Trucks <span></span></h2>
+
+                        <div class="page-bar">
+
+                            <ul class="page-breadcrumb">
+                                <li>
+                                    <a href="index.html"><i class="fa fa-home"></i> Ship Easy</a>
+                                </li>
+                                <li>
+                                    <a href="#">All Truck Tables</a>
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+                    </div>
+
+                    <!-- row -->
+                    <div class="row">
+                        <!-- col -->
+                        <div class="col-md-12">
+
+
+                            <!-- tile -->
+                            <section class="tile">
+
+{#                            <!-- tile -->#}
+                            <section class="tile">
+
+                                <!-- tile header -->
+                                <div class="tile-header dvd dvd-btm">
+                                    <h1 class="custom-font"><strong>Responsive</strong> Table</h1>
+                                    <ul class="controls">
+                                        <li class="dropdown">
+
+                                            <a role="button" tabindex="0" class="dropdown-toggle settings" data-toggle="dropdown">
+                                                <i class="fa fa-cog"></i>
+                                                <i class="fa fa-spinner fa-spin"></i>
+                                            </a>
+
+                                            <ul class="dropdown-menu pull-right with-arrow animated littleFadeInUp">
+                                                <li>
+                                                    <a role="button" tabindex="0" class="tile-toggle">
+                                                        <span class="minimize"><i class="fa fa-angle-down"></i>&nbsp;&nbsp;&nbsp;Minimize</span>
+                                                        <span class="expand"><i class="fa fa-angle-up"></i>&nbsp;&nbsp;&nbsp;Expand</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a role="button" tabindex="0" class="tile-refresh">
+                                                        <i class="fa fa-refresh"></i> Refresh
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a role="button" tabindex="0" class="tile-fullscreen">
+                                                        <i class="fa fa-expand"></i> Fullscreen
+                                                    </a>
+                                                </li>
+                                            </ul>
+
+                                        </li>
+                                        <li class="remove"><a role="button" tabindex="0" class="tile-close"><i class="fa fa-times"></i></a></li>
+                                    </ul>
+                                </div>
+                                <!-- /tile header -->
+
+                                <!-- tile body -->
+                                <a class="fancybox" href="#inline1" title="Welcome To TopTime"></a>
+
+                                <div class="tile-body">
+                                    <table class="table table-custom dt-responsive" id="responsive-usage" width="100%">
+                                        <thead>
+                                        <tr>
+                                             <th>Licen Number</th>
+
+                                            <th>licen Type</th>
+                                            <th>Driver Name</th>
+
+{##}
+                                            <th>Mobile Number</th>
+                                            <th>operator</th>
+                                             <th>Edit</th>
+                                            <th>Delete</th>
+                                        </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                                <!-- /tile body -->
+
+                            </section>
+                            <!-- /tile -->
+
+
+            </section>
+            <!--/ CONTENT -->
+
+
+{% endblock %}
+
+{% block scripts %}
+
+
+        <!-- ============================================
+        ============== Vendor JavaScripts ===============
+        ============================================= -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="{% static "assets/js/vendor/jquery/jquery-1.11.2.min.js"%}"><\/script>')</script>
+
+        <script src="{% static "assets/js/vendor/bootstrap/bootstrap.min.js"%}"></script>
+
+        <script src="{% static "assets/js/vendor/jRespond/jRespond.min.js"%}"></script>
+
+        <script src="{% static "assets/js/vendor/sparkline/jquery.sparkline.min.js"%}"></script>
+
+        <script src="{% static "assets/js/vendor/slimscroll/jquery.slimscroll.min.js"%}"></script>
+
+        <script src="{% static "assets/js/vendor/animsition/js/jquery.animsition.min.js"%}"></script>
+
+        <script src="{% static "assets/js/vendor/screenfull/screenfull.min.js"%}"></script>
+
+        <script src="{% static "assets/js/vendor/datatables/js/jquery.dataTables.min.js"%}"></script>
+        <script src="{% static "assets/js/vendor/datatables/extensions/ColReorder/js/dataTables.colReorder.min.js"%}"></script>
+        <script src="{% static "assets/js/vendor/datatables/extensions/Responsive/js/dataTables.responsive.min.js"%}"></script>
+        <script src="{% static "assets/js/vendor/datatables/extensions/ColVis/js/dataTables.colVis.min.js"%}"></script>
+        <script src="{% static "assets/js/vendor/datatables/extensions/TableTools/js/dataTables.tableTools.min.js"%}"></script>
+        <script src="{% static "assets/js/vendor/datatables/extensions/dataTables.bootstrap.js"%}"></script>
+
+        <!--/ vendor javascripts -->
+
+        <!-- ===============================================
+        ============== Page Specific Scripts ===============
+        ================================================ -->
+
+        <script type="text/javascript">
+	$(document).ready(function() {
+	/*	function date_formatter(date){//update this
+                        date=date.split('-');
+                         date = date[2]+'-'+date[1]+'-'+date[0];
+                    return date
+                }; //update this*/
+
+		$('.fancybox').fancybox();
+                $('.fancybox-media')
+			.attr('rel', 'media-gallery')
+			.fancybox({
+				openEffect : 'none',
+				closeEffect : 'none',
+				prevEffect : 'none',
+		        	nextEffect : 'none',
+				arrows : false,
+				helpers : {
+					media : {},
+					buttons : {}
+				}
+		});
+
+            $(window).load(function(){
+
+
+                //initialize responsive datatable
+                var table3 = $('#responsive-usage').DataTable({
+                    "processing":true,
+{#                    "ajax": "{% static "assets/extras/datatables-responsive.json"%}",#}
+                    "ajax" :
+                        {
+                                            "url": "/driver/all_driver/",
+                                            "dataSrc": "",
+                                            "targets": -1,
+{#                "type":"POST",#}
+                                            "dataType": "json",
+                                            "contentType": "application/json; charset=utf-8"
+                        },
+
+                    "columns": [
+
+                        { "data": "licen_number" },
+                        { "data": "licaen_type" },
+                        { "data": "driver_name" },
+                        { "data": "mobile_number" },
+                        { "data": "operator" },
+{#                        { "data": "wheels" },#}
+{#                        { "data": "owener_name" },#}
+{#                        { "data": "axle_type" },#}
+{#                        { "data": "model" },#}
+                        {
+                        "title": "Edit",
+                            "render": function (data, type, row, meta) {
+
+                            return '<a href="/driver/edit_driver/' + row["id"] + '">' + "Edit" + '</a>';
+             },
+
+         },
+                        {
+                            "title": "Deleate",
+                            "render": function (data, type, row, meta) {
+                                return '<a href="/driver/delete_driver/' + row["id"] + '">' + "Deleate" + '</a>';
+                            }
+                        }
+                    ],
+                    "aoColumnDefs": [
+                      { 'bSortable': false, 'aTargets': [ "no-sort" ] }
+                    ]
+                });
+
+                var table = $('#responsive-usage').DataTable();
+
+$('#responsive-usage tbody').on( 'click', 'td', function () {
+    if ((table.cell( this ).index().columnVisible) === 8)
+                {
+                    alert("data Deleted");
+                }
+{#    else{#}
+{#                    alert("by");#}
+{##}
+{#    }#}
+
+
+} );
+                //*initialize responsive datatable
+
+                //initialize responsive datatable
+                function stateChange(iColumn, bVisible) {
+                    console.log('The column', iColumn, ' has changed its status to', bVisible);
+                }
+
+                var table4 = $('#advanced-usage').DataTable({
+                    "ajax": "{% static "assets/extras/datatables-basic.json"%}",
+                    "columns": [
+                        { "data": "id" },
+                        { "data": "firstName" },
+                        { "data": "lastName" }
+                    ],
+                    "aoColumnDefs": [
+                      { 'bSortable': false, 'aTargets': [ "no-sort" ] }
+                    ]
+                });
+
+                var colvis = new $.fn.dataTable.ColVis(table4);
+
+                $(colvis.button()).insertAfter('#colVis');
+                $(colvis.button()).find('button').addClass('btn btn-default').removeClass('ColVis_Button');
+
+
+                $(tt.fnContainer()).insertAfter('#tableTools');
+                //*initialize responsive datatable
+
+            });
+        </script>
+        <!--/ Page Specific Scripts -->
+
+{% endblock %}

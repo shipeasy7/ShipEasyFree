@@ -1,0 +1,166 @@
+{% extends 'home.html' %}
+{% load staticfiles %}
+{% block contain %}
+            <section id="content">
+
+                <div class="page page-forms-wizard">
+
+                    <div class="pageheader">
+
+                        <h2>Add Truck<span>// You can place subtitle here</span></h2>
+
+                        <div class="page-bar">
+
+                            <ul class="page-breadcrumb">
+                                <li>
+                                    <a href="index.html"><i class="fa fa-home"></i> Ship Easy</a>
+                                </li>
+                               <li>
+                                    <a href="#">Add Truck One/Three</a>
+                                </li>
+                                <li>
+                                    <a href="#">Add Truck Two/Three</a>
+                                </li>
+                                 <li>
+                                    <a href="#">Add Truck Three</a>
+                                </li>
+                            </ul>
+
+                        </div>
+
+                            <form name="form1" role="form" id="form1" action="/truck/add_truck_three_process/" method="post" enctype="multipart/form-data">{% csrf_token %}
+                                <div class="row">
+                                    <div hidden><input type="text" name="id" value="{{ truck_id }}"></div>
+                                    <div hidden><input type="text" name="update_id" value="{{ truck_obj.id }}"></div>
+
+                                            <div class="form-group col-md-4">
+                                            <label for="username">Owener Namer</label>
+                                            <input type="text" name="owener_name" id="owener_name" class="form-control"
+                                                  value="{{ truck_obj.owener_name }}"
+                                                   required>
+                                        </div>
+
+                                            <div class="form-group col-md-4">
+                                            <label for="username">Contact:</label>
+                                            <input type="text" name="contact" id="contact" class="form-control"
+                                                    pattern="[789][0-9]{9}", value="{{ truck_obj.conatact }}"
+                                                   required/>
+                                        </div>
+                                </div>
+
+                                        <div class="row">
+                                            <div class="form-group col-md-3">
+                                                <label for="passwordConfirm">Pan Upload: </label>
+                                                <input type="file" name="file1" id="pan_upload" class="form-control"
+
+                                                       required/>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="passwordConfirm">Fitness upload: </label>
+                                                <input type="file" name="file2" id="fitnes" class="form-control"
+
+                                                       required/>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                            <label for="username">Dates:</label>
+                                            <input type="text" name="date" id="datepicker" class="form-control"
+                                                   value="{{ truck_obj.date_of_fitnace_certificate }}"
+                                                   required>
+                                            </div>
+                                        </div>
+
+{#            <div class="form-row">#}
+{#                <label>#}
+{#                    <span>Birth Date</span>#}
+{#                    <input type="text" name="dob" id="datepicker"  required>#}
+{#                </label>#}
+{#            </div>#}
+                                            </div>
+
+
+{#                                        <div class="form-group">#}
+{#                                            <label for="phone">Phone: </label>#}
+{#                                            <input type="text" name="phone" id="phone" class="form-control" placeholder="(XXX) XXXX XXX"#}
+{#                                                   data-parsley-trigger="change"#}
+{#                                                   pattern="^[\d\+\-\.\(\)\/\s]*$"#}
+{#                                                   required>#}
+{#                                        </div>#}
+{##}
+{#                                        <div class="checkbox">#}
+{#                                            <label class="checkbox checkbox-custom">#}
+{#                                                <input type="checkbox" name="agree" id="agree"#}
+{#                                                       data-parsley-trigger="change"#}
+{#                                                       required>#}
+{#                                                <i></i> I agree to the <a href class="text-info">Terms of Service</a>#}
+{#                                            </label>#}
+{#                                        </div>#}
+
+{#                                <input type="submit" value="next">#}
+<div class="row", align="center" style="align-content: center">
+<input type="submit" class="btn btn-success" id="form1Submit" value="Next"></input>
+</div>
+
+                        </form>
+
+                    </div>
+                        </div>
+
+                    </div>
+                    <!-- /page content -->
+
+                </div>
+
+            </section>
+            <!--/ CONTENT -->
+{% endblock %}
+{% block scripts %}
+
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+              $( function() {
+                  $("#datepicker").datepicker({
+                      minDate: 0,
+                      changeMonth: true,
+                      changeYear: true
+                  });
+              });
+  </script>
+    <script>
+var file = document.getElementById('pan_upload');
+var file2 = document.getElementById('fitnes');
+
+file.onchange = function(e){
+    var ext = this.value.match(/\.([^\.]+)$/)[1];
+    switch(ext)
+    {
+        case 'jpg':
+        case 'jpeg':
+        case 'bmp':
+        case 'png':
+        case 'tif':
+
+            break;
+        default:
+            alert('Please select Image File');
+            this.value='';
+    }
+};
+file2.onchange = function(e){
+    var ext = this.value.match(/\.([^\.]+)$/)[1];
+    switch(ext)
+    {
+        case 'jpg':
+        case 'jpeg':
+        case 'bmp':
+        case 'png':
+        case 'tif':
+
+            break;
+        default:
+            alert('Please select Image File');
+            this.value='';
+    }
+};
+    </script>
+{% endblock %}
