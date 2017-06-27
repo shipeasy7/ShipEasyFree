@@ -62,7 +62,13 @@ def activete_user(request,id):
     return HttpResponseRedirect('/base/login/')
 
 def login(request):
-    return render(request,'login.html')
+    login_status = (request.GET.get('status'))
+    if login_status == "unsuccessful":
+        error_message = "Invalid Login Or Inactive User"
+    else:
+        error_message = ""
+    return render(request,'login.html',{'message':error_message})
+
 
 def login_process(request):
     user_email = request.POST.get('email')
@@ -82,17 +88,19 @@ def login_process(request):
 
             else:
                 print("not Active")
-                return HttpResponseRedirect('/base/login')
+                return HttpResponseRedirect('/base/login/?status=unsuccessful')
         else:
             print("not a user")
-            return HttpResponseRedirect('/base/login')
+            return HttpResponseRedirect('/base/login/?status=unsuccessful')
     else:
         print("Not Yet Registered")
+    return HttpResponseRedirect('/base/login/?status=unsuccessful')
 
-    return render(request,'home.html',{'user': request.session.get('user')})
+    # return render(request,'home.html',{'user': request.session.get('user')})
 
 @login_required
 def base(request):
+    new_list = profile_for_all(request)
     return render(request, 'home.html', {'user': request.session.get('user')})
 
 def profile(request):
@@ -100,19 +108,20 @@ def profile(request):
     user_obj = User.objects.get(username = user)
     add_user_obj = Add_user.objects.get(user_name= user_obj.id)
 
-    image_name = str(add_user_obj.company_logo)
-    logo =os.listdir(settings.MEDIA_ROOT+'/company_pics/')
-    print(image_name)
-    x = (image_name.split('_',1))
-    new_image = x[1]
-    new_list = []
-    print("/////////",(str(add_user_obj.user_name_id)+'_'+'c_logo'+str(new_image)))
-    for items in logo:
-        if items.startswith(str(add_user_obj.user_name_id)+'_'+'c_logo'+"_"+new_image):
-            new_list.append({'link': '/media/company_pics/' + items})
-            print("////////",new_list)
+    # image_name = str(add_user_obj.company_logo)
+    # logo =os.listdir(settings.MEDIA_ROOT+'/company_pics/')
+    # print(image_name)
+    # x = (image_name.split('_',1))
+    # new_image = x[1]
+    # new_list = []
+    # print("/////////",(str(add_user_obj.user_name_id)+'_'+'c_logo'+str(new_image)))
+    # for items in logo:
+    #     if items.startswith(str(add_user_obj.user_name_id)+'_'+'c_logo'+"_"+new_image):
+    #         new_list.append({'link': '/media/company_pics/' + items})
+    #         print("////////",new_list)
 
 
+    new_list = profile_for_all(request)
 
 
 
@@ -127,16 +136,27 @@ def profile(request):
     #         print("name-------------", name)
     #         new_list.append({'link': '/media/company_pics/' + item, 'name': name})
     #         print("=======#",new_list)
-    return render(request, 'base/profile.html', {'user':user, 'user_obj':add_user_obj,'new_list':new_list})
+
+    status = (request.GET.get('status'))
+    if status == "added":
+        message = "Truck Added Suceess fully"
+    elif status == "edited":
+        message = "Driver Info Edited"
+
+    else:
+        message = ""
+    return render(request, 'base/profile.html', {'user':user, 'user_obj':add_user_obj,'new_list':new_list, 'message':message,
+                                                 'new_list': new_list})
 
 def edit_profile_one(request):
     user = request.session.get('user')
+    new_list = profile_for_all(request)
     user_obj = User.objects.get(username = user)
     add_user_obj = Add_user.objects.get(user_name= user_obj.id)
     print("---------",add_user_obj.company_name)
     print("------------",user_obj)
     return render(request, 'base/edit_profile_one.html' , {"user": user, 'company_name':add_user_obj.company_name,
-                                                           'user_name':user})
+                                                           'user_name':user, 'new_list':new_list})
 
 def edit_profile_one_process(request):
     user_session_id = request.session.get('user')
@@ -178,18 +198,20 @@ def edit_profile_one_process(request):
 
 def edit_profile_two(request):
     user = request.session.get('user')
+    new_list = profile_for_all(request)
     user_obj = User.objects.get(username = user)
     add_user_obj = Add_user.objects.get(user_name= user_obj.id)
     print("---------",add_user_obj.company_name)
     print("------------",user_obj)
     return render(request, 'base/edit_profile_two.html', {"user": user, 'company_name':add_user_obj.company_name,
-                                                           'user_name':user})
+                                                           'user_name':user, 'new_list':new_list})
 
 
 def edit_profile_two_process(request):
     print("in user_edit")
     print("in edit 3")
     user_session_id = request.session.get('user')
+    new_list = profile_for_all(request)
     user_obj = User.objects.get(username = user_session_id)
     add_user_obj = Add_user.objects.get(user_name = user_obj.id)
 
@@ -204,12 +226,13 @@ def edit_profile_two_process(request):
 
 def edit_profile_three(request):
     user = request.session.get('user')
+    new_list = profile_for_all(request)
     user_obj = User.objects.get(username = user)
     add_user_obj = Add_user.objects.get(user_name= user_obj.id)
     print("---------",add_user_obj.company_name)
     print("------------",user_obj)
     return render(request, 'base/edit_profile_three.html', {"user": user, 'company_name':add_user_obj.company_name,
-                                                           'user_obj':add_user_obj})
+                                                           'user_obj':add_user_obj, 'new_list':new_list})
 
 
 def edit_profile_three_process(request):
@@ -223,10 +246,27 @@ def edit_profile_three_process(request):
     add_user_obj.mobile_number = request.POST.get('mobile_number')
     add_user_obj.email = request.POST.get('email')
     add_user_obj.save()
-    return HttpResponseRedirect("/base/profile/")
+    return HttpResponseRedirect("/base/profile/?status=edited")
 
 
+def profile_for_all(request):
+    user = request.session.get('user')
+    user_obj = User.objects.get(username = user)
+    add_user_obj = Add_user.objects.get(user_name= user_obj.id)
 
+    image_name = str(add_user_obj.company_logo)
+    logo =os.listdir(settings.MEDIA_ROOT+'/company_pics/')
+    print(image_name)
+    x = (image_name.split('_',1))
+    new_image = x[1]
+    new_list = []
+    print("/////////",(str(add_user_obj.user_name_id)+'_'+'c_logo'+str(new_image)))
+    for items in logo:
+        if items.startswith(str(add_user_obj.user_name_id)+'_'+'c_logo'+"_"+new_image):
+            new_list.append({'link': '/media/company_pics/' + items})
+            print("////////",new_list)
+
+    return new_list
 
 
 

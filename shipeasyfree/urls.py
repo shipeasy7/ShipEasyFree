@@ -30,6 +30,8 @@ urlpatterns = [
     url('^truck/', include('truck.urls')),
     url('^driver/', include('driver.urls')),
     url('^gps/', include('gps.urls')),
+    # url('^truck_driver_pair/', include('truckDriverPair.urls')),
+    url('^truck_driver_pair/', include('truckDriverPair.urls')),
 
     url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 ]

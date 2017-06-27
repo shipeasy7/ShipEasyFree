@@ -1,23 +1,22 @@
 {% extends 'home.html' %}
 {% load staticfiles %}
 {% block contain %}
-     <section id="content">
-
+<section id="content">
 
                 <div class="page page-forms-wizard">
 
                     <div class="pageheader">
 
-                        <h2>Send Scanrd Form</h2>
+                        <h2>Truck Driver Pair<span>// You can place subtitle here</span></h2>
 
                         <div class="page-bar">
 
                             <ul class="page-breadcrumb">
                                 <li>
-                                    <a href="#"><i class="fa fa-home"></i> Ship Easy</a>
+                                    <a href="index.html"><i class="fa fa-home"></i> Ship Easy</a>
                                 </li>
                                 <li>
-                                    <a href="#">Send Scaned Details</a>
+                                    <a href="#">Pair Truck Driver</a>
                                 </li>
 {#                                <li>#}
 {#                                    <a href="form-wizard.html">Form Wizard</a>#}
@@ -26,44 +25,35 @@
 
                         </div>
 
-                            <form name="form1" role="form" id="form1" action="/gps/mail_documents/" method="post" enctype="multipart/form-data">{% csrf_token %}
+                            <form name="form1" role="form" id="form1" action="/truck_driver_pair/pair_process/" method="post" enctype="multipart/form-data">{% csrf_token %}
                                 <div class="row">
                             <div class="col-md-4">
-                               <label class="control-label">Select Driver Mobile Number</label>
+                               <label class="control-label">Select Truck</label>
 		                    <select name="truck" id="truck" class="form-control col-md-4">
-		                        <option value="None">Select Driver Mobile Number</option>
-                                    {% for i in driver %}
+		                        <option value="">Select Driver</option>
+                                    {% for i in truck %}
                         {#                <input type="text" value="{{ i.id }}">#}
-                                        <option value="{{ i.mobile_number }}" >{{ i.mobile_number }}</option>
+                                        <option value="{{ i.id }}" >{{ i.licanse_number }}</option>
                                     {% endfor %}
                                     </select>
                             </div>
 
                                 <div class="col-md-4">
-                                    <label class="control-label">Select Truck Mobile Number</label>
+                                    <label class="control-label">Select Driver</label>
 
 
 
 		                    <select name="driver" id="driver" class="form-control">
-		                        <option value="None">Select Truck Mobile Number</option>
-                                    {% for i in truck %}
+		                        <option value="">Select Driver</option>
+                                    {% for i in driver %}
                         {#                <input type="text" value="{{ i.id }}">#}
-                                        <option value="{{ i.mobile_number }}" >{{ i.mobile_number }}</option>
+                                        <option value="{{ i.id }}" >{{ i.driver_name }}</option>
                                     {% endfor %}
                                     </select>
                                 </div>
                                         </div>
-{#                    <input type="file" name="file1"/>#}
-                            <div class="row">
-                                                <div class="form-group col-md-3">
-                                                <label for="passwordConfirm">Scaned Document: </label>
-                                                <input type="file" name="file1" id="fitnes" class="form-control"
-                                                       data-parsley-trigger="change"
-                                                       data-parsley-range="[4, 20]"
-                                                       data-parsley-equalto="#password"
-                                                       required>
-                                            </div>
-                            </div>
+
+
 
 {#            <div class="form-row">#}
 {#                <label>#}
@@ -90,11 +80,8 @@
 {#                                                <i></i> I agree to the <a href class="text-info">Terms of Service</a>#}
 {#                                            </label>#}
 {#                                        </div>#}
-{# <input type="submit" class="btn btn-success" id="form1Submit">Next</input>#}
-{#                                <input type="submit" value="next">#}
-                            <div class="row", align="center" style="align-content: center">
-<input type="submit" class="btn btn-success" id="form1Submit" value="Next"></input>
-</div>
+
+                                <input type="submit" value="next">
 
 
                         </form>
@@ -107,32 +94,6 @@
 
                 </div>
 
-       <div align="center">
-                            <p style="color: #1ccdaa; font-size:200%;">{{ message }}*</p>
-                        </div>
-
             </section>
             <!--/ CONTENT -->
-
-
-{% endblock %}
-
-{% block scripts %}
-
-      <script>
-  $( function() {
-      var message = $("#message_type").val();
-      if (message !== "")
-      {
-           $( "#dialog" ).dialog();
-      }
-      else
-      {
-
-      }
-
-
-
-  } );
-  </script>
 {% endblock %}

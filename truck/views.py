@@ -31,10 +31,13 @@ from .models import Truck_data
 
 from django.shortcuts import render
 
+from base.views import profile_for_all
+
 # Create your views here.
 def add_truck_one(request):
     user = request.session.get('user')
-    return render(request,'truck/add_truck_one.html',{'user':user})
+    new_list = profile_for_all(request)
+    return render(request,'truck/add_truck_one.html',{'user':user,'new_list':new_list})
 
 
 def add_truck_one_process(request):
@@ -91,7 +94,8 @@ def add_truck_one_process(request):
 
 def add_truck_two(request, id):
     user = request.session.get('user')
-    return render(request, 'truck/add_truck_two.html', {'user': user, 'truck_id': id})
+    new_list = profile_for_all(request)
+    return render(request, 'truck/add_truck_two.html', {'user': user, 'truck_id': id, 'new_list':new_list})
 
 
 def add_truck_two_process(request):
@@ -130,7 +134,8 @@ def add_truck_two_process(request):
 
 def add_truck_three(request,id):
     user = request.session.get('user')
-    return render(request,'truck/add_truck_three.html',{'user':user, 'truck_id':id})
+    new_list = profile_for_all(request)
+    return render(request,'truck/add_truck_three.html',{'user':user, 'truck_id':id, 'new_list':new_list})
 
 
 def add_truck_three_process(request):
@@ -176,7 +181,7 @@ def add_truck_three_process(request):
             truck_obj.save()
         else:
             print("user Not found please urls Id")
-        return HttpResponseRedirect('/truck/truck_table/')
+        return HttpResponseRedirect('/truck/truck_table/?status=added')
     else:
         try:
             truck_obj = Truck_data.objects.get(id=update_id)
@@ -213,12 +218,21 @@ def add_truck_three_process(request):
             truck_obj.save()
         else:
             print("user Not found please urls Id")
-        return HttpResponseRedirect('/truck/truck_table/')
+        return HttpResponseRedirect('/truck/truck_table/?status=edited')
 
 
 def truck_table(request):
     user = request.session.get('user')
-    return render(request,'truck/truck_table.html',{'user':user})
+    new_list = profile_for_all(request)
+    status = (request.GET.get('status'))
+    if status == "added":
+        message = "Truck Added Suceess fully"
+    elif status == "edited":
+        message = "Driver Info Edited"
+
+    else:
+        message = ""
+    return render(request,'truck/truck_table.html',{'user':user, 'message':message,'new_list':new_list})
 
 def all_truck(request):
     truck = []
@@ -233,21 +247,24 @@ def all_truck(request):
 
 def edit_truck(request, id):
     user = request.session.get('user')
+    new_list = profile_for_all(request)
     truck_obj = Truck_data.objects.get(id = id)
     print(truck_obj)
-    return render(request,'truck/add_truck_one.html',{"truck_obj":truck_obj,'user':user })
+    return render(request,'truck/add_truck_one.html',{"truck_obj":truck_obj,'user':user,'new_list':new_list })
 
 def edit_truck_two(request, id):
     user = request.session.get('user')
+    new_list = profile_for_all(request)
     truck_obj = Truck_data.objects.get(id = id)
     print(truck_obj)
-    return render(request,'truck/add_truck_two.html',{"truck_obj":truck_obj,'user':user })
+    return render(request,'truck/add_truck_two.html',{"truck_obj":truck_obj,'user':user,'new_list':new_list })
 
 def edit_truck_three(request,id):
     user = request.session.get('user')
+    new_list = profile_for_all(request)
     truck_obj = Truck_data.objects.get(id = id)
     print(truck_obj)
-    return render(request,'truck/add_truck_three.html',{"truck_obj":truck_obj,'user':user })
+    return render(request,'truck/add_truck_three.html',{"truck_obj":truck_obj,'user':user,'new_list':new_list })
 
 
 def delete_truck(request,id):

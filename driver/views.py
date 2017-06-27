@@ -28,10 +28,12 @@ import json
 from .models import Driver_add
 # Create your views here.
 
+from base.views import profile_for_all
 
 def add_driver_one(request):
     user = request.session.get('user')
-    return render(request,'driver/add_driver_one.html',{'user':user})
+    new_list = profile_for_all(request)
+    return render(request,'driver/add_driver_one.html',{'user':user,'new_list':new_list})
 
 
 def add_driver_one_process(request):
@@ -97,7 +99,8 @@ def add_driver_one_process(request):
 
 def add_driver_two(request,id):
     user = request.session.get('user')
-    return render(request,'driver/add_driver_two.html',{'user':user, 'id' : id})
+    new_list = profile_for_all(request)
+    return render(request,'driver/add_driver_two.html',{'user':user, 'id' : id, 'new_list':new_list})
 
 
 def add_driver_two_process(request):
@@ -118,7 +121,7 @@ def add_driver_two_process(request):
             driver_obj.address_one =a_one
             driver_obj.address_two = a_two
             driver_obj.save()
-        return HttpResponseRedirect('/driver/driver_table/')
+        return HttpResponseRedirect('/driver/driver_table/?status=added')
     else:
         try:
             driver_obj = Driver_add.objects.get(id = update_id)
@@ -130,13 +133,22 @@ def add_driver_two_process(request):
             driver_obj.address_one =a_one
             driver_obj.address_two = a_two
             driver_obj.save()
-        return HttpResponseRedirect('/driver/driver_table/')
+        return HttpResponseRedirect('/driver/driver_table/?status=edited')
 
 
 
 def driver_table(request):
     user = request.session.get('user')
-    return render(request, 'driver/driver_table.html', {'user': user})
+    status = (request.GET.get('status'))
+    if status == "added":
+        message = "Added Suceess fully"
+    elif status == "edited":
+        message = "driver Info Edited"
+
+    else:
+        message = ""
+    new_list = profile_for_all(request)
+    return render(request, 'driver/driver_table.html', {'user': user, 'message':message, 'new_list':new_list})
 
 
 def all_driver(request):
@@ -153,6 +165,7 @@ def edit_driver(request, id):
     user = request.session.get('user')
     driver_obj = Driver_add.objects.get(id = id)
     print(driver_obj)
+    new_list = profile_for_all(request)
     return render(request, 'driver/add_driver_one.html', {"driver_obj": driver_obj, 'user': user})
 
 
@@ -160,7 +173,8 @@ def edit_driver_two(request, id):
     user = request.session.get('user')
     driver_obj = Driver_add.objects.get(id=id)
     print(driver_obj)
-    return render(request, 'driver/add_driver_two.html', {"driver_obj": driver_obj, 'user': user})
+    new_list = profile_for_all(request)
+    return render(request, 'driver/add_driver_two.html', {"driver_obj": driver_obj, 'user': user,'new_list':new_list})
 
 
 def delete_driver(request,id):

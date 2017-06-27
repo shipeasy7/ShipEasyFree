@@ -1,33 +1,26 @@
 {% extends 'home.html' %}
 {% load staticfiles %}
 {% block contain %}
-
-<section id="content">
-
-
-<div id="dialog" title="ship easy" style="text-align: center;">
-<input type="text" value="{{ message }}" id = "message_type" hidden>
-  <p id="message_body" align="center">{{ message }}</p>
-</div>
-
-
+    <section id="content">
 
                 <div class="page page-tables-datatables">
 
                     <div class="pageheader">
 
-                        <h2>All Trucks <span></span></h2>
+                        <h2>Datatables <span>// You can place subtitle here</span></h2>
 
                         <div class="page-bar">
 
                             <ul class="page-breadcrumb">
                                 <li>
-                                    <a href="#"><i class="fa fa-home"></i> Ship Easy</a>
+                                    <a href="index.html"><i class="fa fa-home"></i> Ship easy</a>
                                 </li>
                                 <li>
-                                    <a href="#">All Truck Tables</a>
+                                    <a href="#">Status table</a>
                                 </li>
-
+{#                                <li>#}
+{#                                    <a href="tables-datatables.html"></a>#}
+{#                                </li>#}
                             </ul>
 
                         </div>
@@ -43,7 +36,7 @@
                             <!-- tile -->
                             <section class="tile">
 
-{#                            <!-- tile -->#}
+
                             <section class="tile">
 
                                 <!-- tile header -->
@@ -83,22 +76,27 @@
                                 <!-- /tile header -->
 
                                 <!-- tile body -->
-                                <a class="fancybox" href="#inline1" title="Welcome To TopTime"></a>
-
                                 <div class="tile-body">
                                     <table class="table table-custom dt-responsive" id="responsive-usage" width="100%">
                                         <thead>
                                         <tr>
-                                             <th>Licen Number</th>
+                                            <th>ID</th>
+                                            <th>Licen Number</th>
+                                            <th>Driver</th>
+                                            <th>Mobile</th>
+                                            <th>Status</th>
 
-                                            <th>licen Type</th>
-                                            <th>Driver Name</th>
 
-{##}
-                                            <th>Mobile Number</th>
-                                            <th>operator</th>
-                                             <th>Edit</th>
-                                            <th>Delete</th>
+{#                                            <th>Capacity</th>#}
+{#                                            <th>Type</th>#}
+{#                                            <th>wheals</th>#}
+
+{#                                            <th class="none">Owener Name</th>#}
+{#                                            <th class="none">Axcel</th>#}
+{#                                            <th class="none">Model</th>#}
+{#                                            <th width="10%">Action</th>#}
+{#                                            <th width="10%">Action</th>#}
+
                                         </tr>
                                         </thead>
                                     </table>
@@ -112,29 +110,19 @@
             <!--/ CONTENT -->
 
 
+
+
+
 {% endblock %}
 
 {% block scripts %}
 
-  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
         <!-- ============================================
         ============== Vendor JavaScripts ===============
         ============================================= -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="{% static "assets/js/vendor/jquery/jquery-1.11.2.min.js"%}"><\/script>')</script>
 
-        <script src="{% static "assets/js/vendor/bootstrap/bootstrap.min.js"%}"></script>
-
-        <script src="{% static "assets/js/vendor/jRespond/jRespond.min.js"%}"></script>
-
-        <script src="{% static "assets/js/vendor/sparkline/jquery.sparkline.min.js"%}"></script>
-
-        <script src="{% static "assets/js/vendor/slimscroll/jquery.slimscroll.min.js"%}"></script>
-
-        <script src="{% static "assets/js/vendor/animsition/js/jquery.animsition.min.js"%}"></script>
-
-        <script src="{% static "assets/js/vendor/screenfull/screenfull.min.js"%}"></script>
 
         <script src="{% static "assets/js/vendor/datatables/js/jquery.dataTables.min.js"%}"></script>
         <script src="{% static "assets/js/vendor/datatables/extensions/ColReorder/js/dataTables.colReorder.min.js"%}"></script>
@@ -145,39 +133,29 @@
 
         <!--/ vendor javascripts -->
 
+
+
+
+        <!-- ============================================
+        ============== Custom JavaScripts ===============
+        ============================================= -->
+        <script src="{% static "assets/js/main.js"%}"></script>
+        <!--/ custom javascripts -->
+
+
+
+
+
+
         <!-- ===============================================
         ============== Page Specific Scripts ===============
         ================================================ -->
-
-  <script>
-  $( function() {
-      var message = $("#message_type").val();
-      if (message !== "")
-      {
-           $( "#dialog" ).dialog();
-
-      }
-      else
-      {
-
-      }
-
-
-
-  } );
-  </script>
-
-
-
-
-
-  <script type="text/javascript">
-
-
-
-
+        <script>
             $(window).load(function(){
-{#                    $('#myModal').modal('show');#}
+
+                //initialize basic datatable
+
+                //*initialize editable datatable
 
                 //initialize responsive datatable
                 var table3 = $('#responsive-usage').DataTable({
@@ -185,7 +163,7 @@
 {#                    "ajax": "{% static "assets/extras/datatables-responsive.json"%}",#}
                     "ajax" :
                         {
-                                            "url": "/driver/all_driver/",
+                                            "url": "/truck_driver_pair/status_table_data/",
                                             "dataSrc": "",
                                             "targets": -1,
 {#                "type":"POST",#}
@@ -194,35 +172,39 @@
                         },
 
                     "columns": [
-
-                        { "data": "licen_number" },
-                        { "data": "licaen_type" },
+                        { "data": "id" },
+                        { "data": "truck_licen" },
                         { "data": "driver_name" },
-                        { "data": "mobile_number" },
-                        { "data": "operator" },
+                        { "data": "mobile" },
+                        { "data": "status_check" },
+{#                        { "data": "truck_type" },#}
 {#                        { "data": "wheels" },#}
 {#                        { "data": "owener_name" },#}
 {#                        { "data": "axle_type" },#}
 {#                        { "data": "model" },#}
-                        {
-                        "title": "Edit",
-                            "render": function (data, type, row, meta) {
-
-                            return '<a href="/driver/edit_driver/' + row["id"] + '">' + "Edit" + '</a>';
-             },
-
-         },
-                        {
-                            "title": "Deleate",
-                            "render": function (data, type, row, meta) {
-                                return '<a href="/driver/delete_driver/' + row["id"] + '">' + "Deleate" + '</a>';
-                            }
-                        }
+{#                        {#}
+{#                        "title": "Edit",#}
+{#                            "render": function (data, type, row, meta) {#}
+{##}
+{#                            return '<a href="/add_truck/' + row["id"] + '">' + "Edit" + '</a>';#}
+{#             },#}
+{##}
+{#         },#}
+{#                        {#}
+{#                            "title": "Deleate",#}
+{#                            "render": function (data, type, row, meta) {#}
+{#                                return '<a href="/deleate_truck/' + row["id"] + '">' + "Deleate" + '</a>';#}
+{#                            }#}
+{#                        }#}
                     ],
                     "aoColumnDefs": [
                       { 'bSortable': false, 'aTargets': [ "no-sort" ] }
                     ]
                 });
+
+                setInterval( function () {
+    table3.ajax.reload();
+}, 30000 );
 
                 var table = $('#responsive-usage').DataTable();
 
@@ -238,36 +220,11 @@ $('#responsive-usage tbody').on( 'click', 'td', function () {
 
 
 } );
-                //*initialize responsive datatable
-
-                //initialize responsive datatable
-                function stateChange(iColumn, bVisible) {
-                    console.log('The column', iColumn, ' has changed its status to', bVisible);
-                }
-
-                var table4 = $('#advanced-usage').DataTable({
-                    "ajax": "{% static "assets/extras/datatables-basic.json"%}",
-                    "columns": [
-                        { "data": "id" },
-                        { "data": "firstName" },
-                        { "data": "lastName" }
-                    ],
-                    "aoColumnDefs": [
-                      { 'bSortable': false, 'aTargets': [ "no-sort" ] }
-                    ]
-                });
-
-                var colvis = new $.fn.dataTable.ColVis(table4);
-
-                $(colvis.button()).insertAfter('#colVis');
-                $(colvis.button()).find('button').addClass('btn btn-default').removeClass('ColVis_Button');
-
-
-                $(tt.fnContainer()).insertAfter('#tableTools');
-                //*initialize responsive datatable
 
             });
         </script>
         <!--/ Page Specific Scripts -->
+
+
 
 {% endblock %}

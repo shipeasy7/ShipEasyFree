@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'truck',
     'driver',
     'gps',
+    'truckDriverPair',
 ]
 
 MIDDLEWARE = [

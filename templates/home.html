@@ -7,6 +7,7 @@
 {% load staticfiles %}
 
     <head>
+        <link rel="stylesheet" href="http://www.jacklmoore.com/colorbox/example1/colorbox.css" />
 
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -24,6 +25,7 @@
         <!-- vendor css files -->
             <script type="text/javascript" src="{% static "fancybox/source/jquery.fancybox.js"%}"></script>
     <link rel="stylesheet" type="text/css" href="{% static "fancybox/source/jquery.fancybox.css"%}" media="screen" />
+        <link rel="stylesheet" href="{% static "assets/css/bootstrap-dialog.css"%}">
 
         <link rel="stylesheet" href="{% static "assets/css/vendor/bootstrap.min.css"%}">
         <link rel="stylesheet" href="{% static "assets/css/vendor/animate.css"%}">
@@ -35,6 +37,10 @@
         <link rel="stylesheet" href="{% static "assets/js/vendor/datatables/extensions/Responsive/css/dataTables.responsive.css"%}">
         <link rel="stylesheet" href="{% static "assets/js/vendor/datatables/extensions/ColVis/css/dataTables.colVis.min.css"%}">
         <link rel="stylesheet" href="{% static "assets/js/vendor/datatables/extensions/TableTools/css/dataTables.tableTools.min.css"%}">
+        <link rel="stylesheet" href="{% static "assets/js/bootstrap-dialog.js"%}">
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+
         <!-- project main css files -->
         <link rel="stylesheet" href="{% static "assets/css/main.css"%}">
         <!--/ stylesheets -->
@@ -122,6 +128,7 @@
                                 <li>
 
                                     <ul class="color-schemes list-inline">
+
                                         <li class="title">Header Color:</li>
                                         <li><a href="#" class="scheme-drank header-scheme" data-scheme="scheme-default"></a></li>
                                         <li><a href="#" class="scheme-black header-scheme" data-scheme="scheme-black"></a></li>
@@ -513,7 +520,15 @@
 
                                                 </ul>
                                             </li>
-{#                                            <li><a href="/gps"><i class="fa fa-plus-square"></i> <span>Pair Truck Driver</span></a></li>#}
+                                            <li><a href="/gps"><i class="fa fa-plus-square"></i> <span>Pair Truck Driver</span></a>
+                                                <ul>
+                                                    <li><a href="/truck_driver_pair/pair/"><i class="fa fa-caret-right"></i>Pair</a></li>
+                                                    <li><a href="/truck_driver_pair/status_table/"><i class="fa fa-caret-right"></i>Pairing Status</a></li>
+{#                                                     <li><a href="/gps/tracking_device/"><i class="fa fa-caret-right"></i>Tracking</a></li>#}
+
+                                                </ul>
+
+                                            </li>
 
 {#                                            <li>#}
 {#                                                <a href="#"><i class="fa fa-envelope-o"></i> <span>Mail</span> <span class="badge bg-lightred">6</span></a>#}

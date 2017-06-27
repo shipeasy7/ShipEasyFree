@@ -4,6 +4,11 @@
 
 <section id="content">
 
+    <div id="dialog" title="ship easy" style="text-align: center;">
+<input type="text" value="{{ message }}" id = "message_type" hidden>
+  <p id="message_body" align="center">{{ message }}</p>
+</div>
+
                 <div class="page page-tables-datatables">
 
                     <div class="pageheader">
@@ -139,6 +144,25 @@
         <!-- ===============================================
         ============== Page Specific Scripts ===============
         ================================================ -->
+
+      <script>
+  $( function() {
+      var message = $("#message_type").val();
+      if (message !== "")
+      {
+           $( "#dialog" ).dialog();
+      }
+      else
+      {
+
+      }
+
+
+
+  } );
+  </script>
+
+
         <script>
             $(window).load(function(){
 

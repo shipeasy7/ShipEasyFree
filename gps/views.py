@@ -33,10 +33,13 @@ from driver.models import Driver_add
 from truck.models import Truck_data
 from gps.models import Aproved_mobile_number, GPS_status
 
+from base.views import profile_for_all
+
 
 def gps_licen_input(request):
     user = request.session.get('user')
-    return render(request,'gps/gps_input_form.html',{'user':user})
+    new_list = profile_for_all(request)
+    return render(request,'gps/gps_input_form.html',{'user':user,'new_list':new_list})
 
 
 def driver_mobile_number(request, number):
@@ -99,6 +102,7 @@ def print_form(request):
 
 def upload_scaned_documents(request):
     user = request.session.get('user')
+    new_list = profile_for_all(request)
     driver = []
     truck = []
     driver_obj = Driver_add.objects.all().values('mobile_number')
@@ -119,10 +123,17 @@ def upload_scaned_documents(request):
         truck_obj = Truck_data.objects.get(mobile_number = mobile)
         print("&&&&&&&&", truck_obj)
         truck.append(truck_obj)
-    return render(request,'gps/gps_send_form.html',{'user': user, 'driver':driver , 'truck':truck})
+    status = (request.GET.get('status'))
+    if status == "added":
+        message = "Your Documents sended sucessfully If you have any other the you can send"
+    else:
+        message = ""
+    return render(request,'gps/gps_send_form.html',{'user': user, 'driver':driver , 'truck':truck,
+                                                    'new_list': new_list, 'message':message})
 
 def mail_documents(request):
     user = request.session.get('user')
+    new_list = profile_for_all(request)
     if request.method == "POST":
         # this checks that a file exists
         if len(request.FILES) != 0:
@@ -138,11 +149,12 @@ def mail_documents(request):
                 print(str(e))
             email_msg.send()
 
-    return render(request,'gps/gps_send_form.html',{"message":"your mail send sucess fully", 'user':user})
-
+    # return render(request,'gps/gps_send_form.html',{"message":"your mail send sucess fully", 'user':user, 'new_list':new_list})
+    return HttpResponseRedirect('/gps/upload_scaned_documents/?status=added')
 
 def tracking_device(request):
     user = request.session.get('user')
+    new_list = profile_for_all(request)
     truck = []
     aproved_mobile_number = Aproved_mobile_number.objects.all().values('mobile_number')
     for i in Aproved_mobile_number.objects.all().values('mobile_number'):
@@ -219,6 +231,7 @@ dummy_data()
 
 def display_lat_long(request):
     user = request.session.get('user')
+    new_list = profile_for_all(request)
     mobile = request.POST.get("truck")
     truck_obj = Truck_data.objects.get(mobile_number= mobile).licanse_number
     dic = {}
@@ -232,4 +245,4 @@ def display_lat_long(request):
         # print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&", lat_long)
 
     print("=====================",lat_long)
-    return render(request, 'gps/gps_table.html', {"data" : lat_long ,'user': user })
+    return render(request, 'gps/gps_table.html', {"data" : lat_long ,'user': user, 'new_list':new_list })

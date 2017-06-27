@@ -12,6 +12,7 @@
             ===================================================== -->
             <section id="content">
 
+
                 <div class="page page-profile">
 
                     <div class="pageheader">
@@ -830,8 +831,27 @@
 {% block scripts %}
         <link rel="stylesheet" type="text/css" href="{% static "fancybox/source/jquery.fancybox.css"%}" media="screen" />
     <script type="text/javascript" src="{% static "fancybox/source/jquery.fancybox.js"%}"></script>
+  <script>
+  $( function() {
+      var message = $("#message_type").val();
+      alert(message);
+      if (message !== "")
+      {
+           $( "#dialog" ).dialog();
 
+      }
+      else
+      {
+
+      }
+
+
+
+  } );
+  </script>
     <script type="text/javascript">
+
+
 	$(document).ready(function() {
 	/*	function date_formatter(date){//update this
                         date=date.split('-');
