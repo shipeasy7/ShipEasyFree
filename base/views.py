@@ -46,7 +46,7 @@ def registration_process(request):
     new_user = User.objects.create_user(username = user_name, password = password, email = email_id , is_active = False)
     print(new_user.id)
     subject = "testing"
-    message = "Please Click on link to activate your account:http://127.0.0.1:8000/base/activete_user/"+str(new_user.id)
+    message = "Please Click on link to activate your account:http://13.126.200.237:8000/base/activete_user/"+str(new_user.id)
     email = EmailMessage(subject, message, "gauravbole2@gmail.com", [email_id])  # emp_id['email]
     email.send()
     new_user_add = Add_user.objects.create(user_name = new_user, company_name = transport_company_name,
