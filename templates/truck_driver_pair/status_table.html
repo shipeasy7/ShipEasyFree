@@ -139,7 +139,7 @@
         <!-- ============================================
         ============== Custom JavaScripts ===============
         ============================================= -->
-        <script src="{% static "assets/js/main.js"%}"></script>
+{#        <script src="{% static "assets/js/main.js"%}"></script>#}
         <!--/ custom javascripts -->
 
 
@@ -176,21 +176,21 @@
                         { "data": "truck_licen" },
                         { "data": "driver_name" },
                         { "data": "mobile" },
-                        {
-
-                        "type": "html",
-                            "data": "status_check",
-                            "render": function (data) {
-                                if (data === 'paid') {
-                                    return '<span class="label bg-success">' + data + '</span>'
-                                } else if (data === 'unpaid') {
-                                    return '<span class="label bg-warning">' + data + '</span>'
-                                } else if (data === 'cancelled') {
-                                    return '<span class="label bg-lightred">' + data + '</span>'
-                                } else if (data === 'sent') {
-                                    return '<span class="label bg-primary">' + data + '</span>'
-                                }
-                            }
+                        {"data": "status_check"
+{##}
+{#                        "type": "html",#}
+{#                            "data": "status_check",#}
+{#                            "render": function (data) {#}
+{#                                if (data === 'paid') {#}
+{#                                    return '<span class="label bg-success">' + data + '</span>'#}
+{#                                } else if (data === 'unpaid') {#}
+{#                                    return '<span class="label bg-warning">' + data + '</span>'#}
+{#                                } else if (data === 'cancelled') {#}
+{#                                    return '<span class="label bg-lightred">' + data + '</span>'#}
+{#                                } else if (data === 'sent') {#}
+{#                                    return '<span class="label bg-primary">' + data + '</span>'#}
+{#                                }#}
+{#                            }#}
                         },
 {#                        { "data": "truck_type" },#}
 {#                        { "data": "wheels" },#}

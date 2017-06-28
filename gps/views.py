@@ -152,6 +152,7 @@ def mail_documents(request):
     # return render(request,'gps/gps_send_form.html',{"message":"your mail send sucess fully", 'user':user, 'new_list':new_list})
     return HttpResponseRedirect('/gps/upload_scaned_documents/?status=added')
 
+
 def tracking_device(request):
     user = request.session.get('user')
     new_list = profile_for_all(request)
@@ -168,7 +169,7 @@ def tracking_device(request):
         #     truck.append(item)
         truck.append(truck_obj)
         print("==========================",truck)
-    return render(request,'gps/track_device.html',{'user':user , "truck": truck})
+    return render(request,'gps/track_device.html',{'user':user , "truck": truck,"new_list" : new_list})
 
 def xyz(mobile,id):
     print("***********************",mobile)

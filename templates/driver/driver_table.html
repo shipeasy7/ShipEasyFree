@@ -121,20 +121,20 @@
         <!-- ============================================
         ============== Vendor JavaScripts ===============
         ============================================= -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="{% static "assets/js/vendor/jquery/jquery-1.11.2.min.js"%}"><\/script>')</script>
-
-        <script src="{% static "assets/js/vendor/bootstrap/bootstrap.min.js"%}"></script>
-
-        <script src="{% static "assets/js/vendor/jRespond/jRespond.min.js"%}"></script>
-
-        <script src="{% static "assets/js/vendor/sparkline/jquery.sparkline.min.js"%}"></script>
-
-        <script src="{% static "assets/js/vendor/slimscroll/jquery.slimscroll.min.js"%}"></script>
-
-        <script src="{% static "assets/js/vendor/animsition/js/jquery.animsition.min.js"%}"></script>
-
-        <script src="{% static "assets/js/vendor/screenfull/screenfull.min.js"%}"></script>
+{#        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>#}
+{#        <script>window.jQuery || document.write('<script src="{% static "assets/js/vendor/jquery/jquery-1.11.2.min.js"%}"><\/script>')</script>#}
+{##}
+{#        <script src="{% static "assets/js/vendor/bootstrap/bootstrap.min.js"%}"></script>#}
+{##}
+{#        <script src="{% static "assets/js/vendor/jRespond/jRespond.min.js"%}"></script>#}
+{##}
+{#        <script src="{% static "assets/js/vendor/sparkline/jquery.sparkline.min.js"%}"></script>#}
+{##}
+{#        <script src="{% static "assets/js/vendor/slimscroll/jquery.slimscroll.min.js"%}"></script>#}
+{##}
+{#        <script src="{% static "assets/js/vendor/animsition/js/jquery.animsition.min.js"%}"></script>#}
+{##}
+{#        <script src="{% static "assets/js/vendor/screenfull/screenfull.min.js"%}"></script>#}
 
         <script src="{% static "assets/js/vendor/datatables/js/jquery.dataTables.min.js"%}"></script>
         <script src="{% static "assets/js/vendor/datatables/extensions/ColReorder/js/dataTables.colReorder.min.js"%}"></script>
@@ -240,31 +240,31 @@ $('#responsive-usage tbody').on( 'click', 'td', function () {
 } );
                 //*initialize responsive datatable
 
-                //initialize responsive datatable
-                function stateChange(iColumn, bVisible) {
-                    console.log('The column', iColumn, ' has changed its status to', bVisible);
-                }
-
-                var table4 = $('#advanced-usage').DataTable({
-                    "ajax": "{% static "assets/extras/datatables-basic.json"%}",
-                    "columns": [
-                        { "data": "id" },
-                        { "data": "firstName" },
-                        { "data": "lastName" }
-                    ],
-                    "aoColumnDefs": [
-                      { 'bSortable': false, 'aTargets': [ "no-sort" ] }
-                    ]
-                });
-
-                var colvis = new $.fn.dataTable.ColVis(table4);
-
-                $(colvis.button()).insertAfter('#colVis');
-                $(colvis.button()).find('button').addClass('btn btn-default').removeClass('ColVis_Button');
-
-
-                $(tt.fnContainer()).insertAfter('#tableTools');
-                //*initialize responsive datatable
+{#                //initialize responsive datatable#}
+{#                function stateChange(iColumn, bVisible) {#}
+{#                    console.log('The column', iColumn, ' has changed its status to', bVisible);#}
+{#                }#}
+{##}
+{#                var table4 = $('#advanced-usage').DataTable({#}
+{#                    "ajax": "{% static "assets/extras/datatables-basic.json"%}",#}
+{#                    "columns": [#}
+{#                        { "data": "id" },#}
+{#                        { "data": "firstName" },#}
+{#                        { "data": "lastName" }#}
+{#                    ],#}
+{#                    "aoColumnDefs": [#}
+{#                      { 'bSortable': false, 'aTargets': [ "no-sort" ] }#}
+{#                    ]#}
+{#                });#}
+{##}
+{#                var colvis = new $.fn.dataTable.ColVis(table4);#}
+{##}
+{#                $(colvis.button()).insertAfter('#colVis');#}
+{#                $(colvis.button()).find('button').addClass('btn btn-default').removeClass('ColVis_Button');#}
+{##}
+{##}
+{#                $(tt.fnContainer()).insertAfter('#tableTools');#}
+{#                //*initialize responsive datatable#}
 
             });
         </script>
