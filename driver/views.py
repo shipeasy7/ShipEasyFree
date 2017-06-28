@@ -24,6 +24,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime
 from django.core.mail import EmailMessage
 import json
+import os
 
 from .models import Driver_add
 # Create your views here.
@@ -49,8 +50,11 @@ def add_driver_one_process(request):
 
     files1 = request.FILES.get('file1')
     files2 = request.FILES.get('file2')
+
     filename1 = files1._get_name()
     filename2 = files2._get_name()
+    database_finle_name1 = licen_number+"_"+filename1
+    database_finle_name2 = licen_number + "_" + filename2
     filename1 = filename1.replace(' ', '_')
     filename2 = filename2.replace(' ', '_')
     fd1 = open(
@@ -71,7 +75,8 @@ def add_driver_one_process(request):
 
         driver_obj = Driver_add.objects.create(licen_number=licen_number, driver_name=driver_name,
                                                date=new_date, licaen_type=licen_type, mobile_number=mobile_number,
-                                               operator=operator)
+                                               operator=operator, pan_card_pic = database_finle_name1,
+                                               adhar_card = database_finle_name2)
         driver_id = driver_obj.id
 
         if 'file1' in request.FILES:
@@ -92,6 +97,8 @@ def add_driver_one_process(request):
         new_date = datetime.strptime(date, '%B %d, %Y').strftime('%Y-%m-%d')
         print("====================================",new_date)
         driver_obj.date = new_date
+        driver_obj.pan_card_pic = database_finle_name1
+        driver_obj.adhar_card = database_finle_name2
         driver_obj.save()
 
         return HttpResponseRedirect('/driver/edit_driver_two/' + str(id))
@@ -166,7 +173,39 @@ def edit_driver(request, id):
     driver_obj = Driver_add.objects.get(id = id)
     print(driver_obj)
     new_list = profile_for_all(request)
-    return render(request, 'driver/add_driver_one.html', {"driver_obj": driver_obj, 'user': user})
+
+    image_name = str(driver_obj.pan_card_pic)
+    print("image_name", image_name)
+    logo = os.listdir(settings.MEDIA_ROOT + '/driver/')
+    print(image_name)
+    x = (image_name.split('_', 1))
+    print("XXXXXXXXXXXXXXXXXXX",x)
+    print("--------------------------------------------------------",driver_obj.pan_card_pic)
+    new_image = x[1]
+    pan_list = []
+    print("/////////", (str(driver_obj.licen_number) + '_' + 'pan' + str(new_image)))
+    for items in logo:
+        if items.startswith(str(driver_obj.licen_number) + '_' + 'pan' + "_" + new_image):
+            pan_list.append({'link': '/media/driver/' + items})
+            print("////////", pan_list)
+
+    image_name = str(driver_obj.adhar_card)
+    print("image_name", image_name)
+    logo = os.listdir(settings.MEDIA_ROOT + '/driver/')
+    print(image_name)
+    x = (image_name.split('_', 1))
+    print("XXXXXXXXXXXXXXXXXXX", x)
+    print("--------------------------------------------------------", driver_obj.licen_number)
+    new_image = x[1]
+    adhar_list = []
+    print("/////////", (str(driver_obj.licen_number) + '_' + 'adhar' + str(new_image)))
+    for items in logo:
+        if items.startswith(str(driver_obj.licen_number) + '_' + 'adhar' + "_" + new_image):
+            adhar_list.append({'link': '/media/driver/' + items})
+            print("////////", adhar_list)
+
+    return render(request, 'driver/add_driver_one.html', {"driver_obj": driver_obj, 'user': user, 'pan':pan_list,
+                                                          "image_name" : x , 'adhar_pic': adhar_list})
 
 
 def edit_driver_two(request, id):

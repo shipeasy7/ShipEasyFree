@@ -85,19 +85,36 @@
                                             <div class="form-group col-md-3">
                                                 <label for="passwordConfirm">Pan Upload: </label>
                                                 <input type="file" name="file1" id="pan_upload" class="form-control"
-                                                       data-parsley-trigger="change"
-                                                       data-parsley-range="[4, 20]"
-                                                       data-parsley-equalto="#password"
+                                                       value="57250" style="color: transparent"
                                                        required>
+                                            </div>
+                                        <div id="image-holder"></div>
+
+                                            <div>
+                                                 {% for image in pan %}
+
+                                <img src="{{ image.link}}"alt="" height="100px", width="100px">
+                                {% endfor %}
+
+{#                                            <img class="img-circle" src="{% static "assets/images/arnold-avatar.jpg"%}" alt="">#}
+                                        </div>
                                             </div>
                                             <div class="form-group col-md-3">
                                                 <label for="passwordConfirm">Adhar upload: </label>
                                                 <input type="file" name="file2" id="fitnes" class="form-control"
                                                        data-parsley-trigger="change"
-                                                       data-parsley-range="[4, 20]"
+                                                       data-parsley-range="[4, 20]" style="color: transparent"
                                                        data-parsley-equalto="#password"
                                                        required>
                                             </div>
+                                <div id="image-holder2"></div>
+
+                                            <div>
+                                                 {% for image in adhar_pic %}
+
+                                <img src="{{ image.link}}"alt="" height="100px", width="100px">
+                                {% endfor %}
+
 
 {#            <div class="form-row">#}
 {#                <label>#}
@@ -163,5 +180,70 @@
                     });
                 });
             });
+</script>
+<script>
+    $(document).ready(function() {
+        $("#pan_upload").on('change', function() {
+          //Get count of selected files
+          var countFiles = $(this)[0].files.length;
+          var imgPath = $(this)[0].value;
+          var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
+          var image_holder = $("#image-holder");
+          image_holder.empty();
+          if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
+            if (typeof(FileReader) != "undefined") {
+              //loop for each file selected for uploaded.
+              for (var i = 0; i < countFiles; i++)
+              {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                  $("<img />", {
+                    "src": e.target.result,
+                    "class": "thumb-image"
+                  }).appendTo(image_holder);
+                }
+                image_holder.show();
+                reader.readAsDataURL($(this)[0].files[i]);
+              }
+            } else {
+              alert("This browser does not support FileReader.");
+            }
+          } else {
+            alert("Pls select only images");
+          }
+        });
+
+
+
+        $("#fitnes").on('change', function() {
+          //Get count of selected files
+          var countFiles = $(this)[0].files.length;
+          var imgPath = $(this)[0].value;
+          var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
+          var image_holder = $("#image-holder2");
+          image_holder.empty();
+          if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
+            if (typeof(FileReader) != "undefined") {
+              //loop for each file selected for uploaded.
+              for (var i = 0; i < countFiles; i++)
+              {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                  $("<img />", {
+                    "src": e.target.result,
+                    "class": "thumb-image"
+                  }).appendTo(image_holder);
+                }
+                image_holder.show();
+                reader.readAsDataURL($(this)[0].files[i]);
+              }
+            } else {
+              alert("This browser does not support FileReader.");
+            }
+          } else {
+            alert("Pls select only images");
+          }
+        });
+      });
 </script>
 {% endblock %}

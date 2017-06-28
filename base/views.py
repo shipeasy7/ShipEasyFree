@@ -255,6 +255,7 @@ def profile_for_all(request):
     add_user_obj = Add_user.objects.get(user_name= user_obj.id)
 
     image_name = str(add_user_obj.company_logo)
+    print("profile_image_pic",image_name)
     logo =os.listdir(settings.MEDIA_ROOT+'/company_pics/')
     print(image_name)
     x = (image_name.split('_',1))
