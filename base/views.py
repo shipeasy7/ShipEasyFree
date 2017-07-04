@@ -9,25 +9,29 @@
 #  M/V/C: files contain logic Create New User and basic .
 #############################################################
 #############################################################
-
+import string
 
 from django.shortcuts import render
 import os
 
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
+import random
 
 from django.core.mail import EmailMessage
 
 
-from .models import Add_user
+from .models import Add_user, Password_reset
+from truck.models import Truck_data
+from driver.models import Driver_add
+from  gps.models import Aproved_mobile_number
 
 # Create your views here.
 @login_required
@@ -107,6 +111,9 @@ def profile(request):
     user = request.session.get('user')
     user_obj = User.objects.get(username = user)
     add_user_obj = Add_user.objects.get(user_name= user_obj.id)
+    number_of_trucks = Truck_data.objects.all().count()
+    number_of_driver = Driver_add.objects.all().count()
+    number_of_gps_tack = Aproved_mobile_number.objects.all().count()
 
     # image_name = str(add_user_obj.company_logo)
     # logo =os.listdir(settings.MEDIA_ROOT+'/company_pics/')
@@ -146,7 +153,8 @@ def profile(request):
     else:
         message = ""
     return render(request, 'base/profile.html', {'user':user, 'user_obj':add_user_obj,'new_list':new_list, 'message':message,
-                                                 'new_list': new_list})
+                                                 'new_list': new_list, "truck_count":number_of_trucks,
+                                                 "driver_count":number_of_driver, "no_of_gps":number_of_gps_tack})
 
 def edit_profile_one(request):
     user = request.session.get('user')
@@ -268,6 +276,80 @@ def profile_for_all(request):
             print("////////",new_list)
 
     return new_list
+
+
+def password_reset(request):
+    return render(request,'password_reset.html')
+
+
+def id_generator(size=8, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
+
+def password_reset_process(request):
+    email_user = request.POST.get('email')
+    randam_key = id_generator()
+    try:
+        user_obj = User.objects.get(email = email_user)
+        print(user_obj)
+    except ObjectDoesNotExist:
+        user_obj = None
+
+    if user_obj != None:
+        print(user_obj.id)
+        add_user_obj = Add_user.objects.get(user_name_id= user_obj.id)
+
+        pass_obj = Password_reset.objects.create(emil = email_user, mobile_number = str(add_user_obj.mobile_number),
+                                                 otp = randam_key)
+        subject = "TopTime transaction"
+        messages = "Your OTP is:" + str(pass_obj.otp)
+        email = EmailMessage(subject, messages, "gauravbole2@gmail.com", [email_user])  # emp_id['email]
+        email.send()
+
+        return HttpResponseRedirect('/base/otp/?email='+email_user)
+    else:
+        return HttpResponseRedirect('/base/reset_password')
+
+
+def otp(request):
+    email = request.GET.get('email')
+    print("--------", email)
+    return render(request,'otp_check.html',{"email":email})
+
+
+def otp_check(request):
+    otp = request.POST.get("otp")
+    email = request.POST.get("email")
+    otp_obj = Password_reset.objects.get(email = email)
+    user_obj = User.objects.get(email = email)
+    if otp == str(otp_obj.otp):
+        return HttpResponseRedirect("base/change_password/?email"+email)
+    else:
+        return HttpResponseRedirect("base/otp/")
+
+
+def change_password(request):
+    email = request.GET.get('email')
+    return render(request,'change_password.html', {"email":email})
+
+
+def change_password_process(request):
+    email = request.POST.get('email')
+    pwd_one = request.POST.get('password_one')
+    pwd_two = request.POST.get('password_two')
+    try:
+        user_obj = User.objects.get(email = email)
+    except ObjectDoesNotExist:
+        user_obj == None
+
+    if user_obj != None:
+        user_obj.password = pwd_two
+        user_obj.save()
+        return HttpResponseRedirect('/')
+
+    else:
+        return HttpResponseRedirect('/base/change_password')
+
+
 
 
 

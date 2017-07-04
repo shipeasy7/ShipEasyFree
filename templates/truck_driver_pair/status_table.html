@@ -7,7 +7,7 @@
 
                     <div class="pageheader">
 
-                        <h2>Datatables <span>// You can place subtitle here</span></h2>
+                        <h2>Datatables <span></span></h2>
 
                         <div class="page-bar">
 
@@ -40,40 +40,40 @@
                             <section class="tile">
 
                                 <!-- tile header -->
-                                <div class="tile-header dvd dvd-btm">
-                                    <h1 class="custom-font"><strong>Responsive</strong> Table</h1>
-                                    <ul class="controls">
-                                        <li class="dropdown">
-
-                                            <a role="button" tabindex="0" class="dropdown-toggle settings" data-toggle="dropdown">
-                                                <i class="fa fa-cog"></i>
-                                                <i class="fa fa-spinner fa-spin"></i>
-                                            </a>
-
-                                            <ul class="dropdown-menu pull-right with-arrow animated littleFadeInUp">
-                                                <li>
-                                                    <a role="button" tabindex="0" class="tile-toggle">
-                                                        <span class="minimize"><i class="fa fa-angle-down"></i>&nbsp;&nbsp;&nbsp;Minimize</span>
-                                                        <span class="expand"><i class="fa fa-angle-up"></i>&nbsp;&nbsp;&nbsp;Expand</span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a role="button" tabindex="0" class="tile-refresh">
-                                                        <i class="fa fa-refresh"></i> Refresh
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a role="button" tabindex="0" class="tile-fullscreen">
-                                                        <i class="fa fa-expand"></i> Fullscreen
-                                                    </a>
-                                                </li>
-                                            </ul>
-
-                                        </li>
-                                        <li class="remove"><a role="button" tabindex="0" class="tile-close"><i class="fa fa-times"></i></a></li>
-                                    </ul>
-                                </div>
-                                <!-- /tile header -->
+{#                                <div class="tile-header dvd dvd-btm">#}
+{#                                    <h1 class="custom-font"><strong>Responsive</strong> Table</h1>#}
+{#                                    <ul class="controls">#}
+{#                                        <li class="dropdown">#}
+{##}
+{#                                            <a role="button" tabindex="0" class="dropdown-toggle settings" data-toggle="dropdown">#}
+{#                                                <i class="fa fa-cog"></i>#}
+{#                                                <i class="fa fa-spinner fa-spin"></i>#}
+{#                                            </a>#}
+{##}
+{#                                            <ul class="dropdown-menu pull-right with-arrow animated littleFadeInUp">#}
+{#                                                <li>#}
+{#                                                    <a role="button" tabindex="0" class="tile-toggle">#}
+{#                                                        <span class="minimize"><i class="fa fa-angle-down"></i>&nbsp;&nbsp;&nbsp;Minimize</span>#}
+{#                                                        <span class="expand"><i class="fa fa-angle-up"></i>&nbsp;&nbsp;&nbsp;Expand</span>#}
+{#                                                    </a>#}
+{#                                                </li>#}
+{#                                                <li>#}
+{#                                                    <a role="button" tabindex="0" class="tile-refresh">#}
+{#                                                        <i class="fa fa-refresh"></i> Refresh#}
+{#                                                    </a>#}
+{#                                                </li>#}
+{#                                                <li>#}
+{#                                                    <a role="button" tabindex="0" class="tile-fullscreen">#}
+{#                                                        <i class="fa fa-expand"></i> Fullscreen#}
+{#                                                    </a>#}
+{#                                                </li>#}
+{#                                            </ul>#}
+{##}
+{#                                        </li>#}
+{#                                        <li class="remove"><a role="button" tabindex="0" class="tile-close"><i class="fa fa-times"></i></a></li>#}
+{#                                    </ul>#}
+{#                                </div>#}
+{#                                <!-- /tile header -->#}
 
                                 <!-- tile body -->
                                 <div class="tile-body">
@@ -87,7 +87,7 @@
                                             <th>Status</th>
 
 
-{#                                            <th>Capacity</th>#}
+                                            <th>Change Status</th>
 {#                                            <th>Type</th>#}
 {#                                            <th>wheals</th>#}
 
@@ -176,35 +176,15 @@
                         { "data": "truck_licen" },
                         { "data": "driver_name" },
                         { "data": "mobile" },
-                        {"data": "status_check"
-{##}
-{#                        "type": "html",#}
-{#                            "data": "status_check",#}
-{#                            "render": function (data) {#}
-{#                                if (data === 'paid') {#}
-{#                                    return '<span class="label bg-success">' + data + '</span>'#}
-{#                                } else if (data === 'unpaid') {#}
-{#                                    return '<span class="label bg-warning">' + data + '</span>'#}
-{#                                } else if (data === 'cancelled') {#}
-{#                                    return '<span class="label bg-lightred">' + data + '</span>'#}
-{#                                } else if (data === 'sent') {#}
-{#                                    return '<span class="label bg-primary">' + data + '</span>'#}
-{#                                }#}
-{#                            }#}
-                        },
-{#                        { "data": "truck_type" },#}
-{#                        { "data": "wheels" },#}
-{#                        { "data": "owener_name" },#}
-{#                        { "data": "axle_type" },#}
-{#                        { "data": "model" },#}
-{#                        {#}
-{#                        "title": "Edit",#}
-{#                            "render": function (data, type, row, meta) {#}
-{##}
-{#                            return '<a href="/add_truck/' + row["id"] + '">' + "Edit" + '</a>';#}
-{#             },#}
-{##}
-{#         },#}
+                        {"data": "status_check"},
+                        {
+                            "title": "Edit",
+                            "render": function (data, type, row, meta) {
+
+                            return '<a href="/truck_driver_pair/status_change/' + row["id"] + '">' + "Change Status" + '</a>';
+             },
+
+         }
 {#                        {#}
 {#                            "title": "Deleate",#}
 {#                            "render": function (data, type, row, meta) {#}
@@ -215,26 +195,19 @@
                     "aoColumnDefs": [
                       { 'bSortable': false, 'aTargets': [ "no-sort" ] }
                     ]
+
+
+
                 });
 
                 setInterval( function () {
     table3.ajax.reload();
 }, 30000 );
 
-                var table = $('#responsive-usage').DataTable();
-
-$('#responsive-usage tbody').on( 'click', 'td', function () {
-    if ((table.cell( this ).index().columnVisible) === 8)
-                {
-                    alert("data Deleted");
-                }
-{#    else{#}
-{#                    alert("by");#}
-{##}
-{#    }#}
 
 
-} );
+
+
 
             });
         </script>

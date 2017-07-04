@@ -22,3 +22,11 @@ class Add_user(models.Model):
     def __str__(self):
         return self.user_name
 
+class Password_reset(models.Model):
+    emil = models.CharField(max_length=100, null=False, blank=False)
+    mobile_number = models.CharField(max_length=100, null=False, blank=False)
+    otp = models.CharField(max_length=100, null=False, blank=False)
+    is_expired = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.id

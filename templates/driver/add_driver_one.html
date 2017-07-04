@@ -15,10 +15,10 @@
 
                             <ul class="page-breadcrumb">
                                 <li>
-                                    <a href="index.html"><i class="fa fa-home"></i> Ship Easy</a>
+                                    <a href="/base/profile/"><i class="fa fa-home"></i> Ship Easy</a>
                                 </li>
                                 <li>
-                                    <a href="#">Add Driver one/two</a>
+                                    <a href="#">Step One</a>
                                 </li>
 {#                                <li>#}
 {#                                    <a href="form-wizard.html">Form Wizard</a>#}
@@ -30,13 +30,6 @@
                             <form name="form1" role="form" id="form1" action="/driver/add_driver_one_process/" method="post" enctype="multipart/form-data">{% csrf_token %}
                                 <div class="row">
                                     <div hidden><input type="text" name="id" value="{{ driver_obj.id }}"></div>
-                                                <div class="form-group col-md-4">
-                                            <label for="username">Dates</label>
-                                            <input type="text" name="date" id="datepicker" class="form-control"
-                                                  value="{{ driver_obj.date }}"
-                                                   required>
-                                            </div>
-
 
                                             <div class="form-group col-md-4">
                                             <label for="username">Name:</label>
@@ -45,23 +38,32 @@
                                                    required>
                                         </div>
                                     <div class="form-group col-md-4">
-                                            <label for="username">Licen number:</label>
+                                            <label for="username">License number:</label>
                                             <input type="text" name="licen_number" id="licen_number" class="form-control"
                                                     value="{{ driver_obj.licen_number }}"
                                                    required>
                                         </div>
-
+                                </div>
+                                <div class="row">
 
                                     <div class="form-group col-md-4">
-                                         <label for="username">Licen Type</label>
+                                         <label for="username">License Type</label>
                                                 <select name="licen_type" class="form-control mb-10"
                                                         data-parsley-trigger="change"
                                                         required>
                                                     <option value="{{ driver_obj.licaen_type }}">{{ driver_obj.licaen_type }}</option>
-                                                    <option value="foo">Foo</option>
-                                                    <option value="bar">Bar</option>
+                                                    <option value="LCV">LCV</option>
+                                                    <option value="HCV">HCV</option>
+                                                    <option value="MCV">MCV</option>
+
                                                 </select>
                                                 </div>
+                                                                                    <div class="form-group col-md-4">
+                                            <label for="username">License Valid Till:</label>
+                                            <input type="text" name="date" id="datepicker" class="form-control"
+                                                  value="{{ driver_obj.date }}"
+                                                   required>
+                                            </div>
                                 </div>
                                     <div class="row">
                                         <div class="form-group col-md-4">
@@ -76,8 +78,11 @@
                                                         data-parsley-trigger="change"
                                                         required>
                                                     <option value="{{ driver_obj.operator }}">{{ driver_obj.operator }}</option>
-                                                    <option value="Artel">Artel</option>
+                                                    <option value="Airtel">Airtel</option>
                                                     <option value="Idea">Idea</option>
+                                                    <option value="Vodafone">Vodafone</option>
+{#                                                    <option value="Idea">Idea</option>#}
+
                                                 </select>
                                                 </div>
                                     </div>
@@ -85,22 +90,24 @@
                                             <div class="form-group col-md-3">
                                                 <label for="passwordConfirm">Pan Upload: </label>
                                                 <input type="file" name="file1" id="pan_upload" class="form-control"
-                                                       value="57250" style="color: transparent"
+                                                       value="{{ pan }}" style="color: transparent"
                                                        required>
                                             </div>
                                         <div id="image-holder"></div>
 
                                             <div>
                                                  {% for image in pan %}
+                                                     <div class="col-lg-3"><a href={{ image.link }}  target="_blank" class="fancybox"><img src="{{ image.link}}" height="100px", width="100px"/></a></div>
 
-                                <img src="{{ image.link}}"alt="" height="100px", width="100px">
+
+{#                                <img src="{{ image.link}}"alt="" height="100px", width="100px">#}
                                 {% endfor %}
 
 {#                                            <img class="img-circle" src="{% static "assets/images/arnold-avatar.jpg"%}" alt="">#}
                                         </div>
-                                            </div>
+
                                             <div class="form-group col-md-3">
-                                                <label for="passwordConfirm">Adhar upload: </label>
+                                                <label for="passwordConfirm">Aadhar upload: </label>
                                                 <input type="file" name="file2" id="fitnes" class="form-control"
                                                        data-parsley-trigger="change"
                                                        data-parsley-range="[4, 20]" style="color: transparent"
@@ -111,38 +118,16 @@
 
                                             <div>
                                                  {% for image in adhar_pic %}
+					            <div class="col-lg-3"><a href={{ image.link }}  target="_blank" class="fancybox"><img src="{{ image.link}}" height="100px", width="100px"/></a></div>
 
-                                <img src="{{ image.link}}"alt="" height="100px", width="100px">
+{#                                <img src="{{ image.link}}"alt="" height="100px", width="100px">#}
                                 {% endfor %}
 
 
-{#            <div class="form-row">#}
-{#                <label>#}
-{#                    <span>Birth Date</span>#}
-{#                    <input type="text" name="dob" id="datepicker"  required>#}
-{#                </label>#}
-{#            </div>#}
                                             </div>
 
+                                        </div>
 
-{#                                        <div class="form-group">#}
-{#                                            <label for="phone">Phone: </label>#}
-{#                                            <input type="text" name="phone" id="phone" class="form-control" placeholder="(XXX) XXXX XXX"#}
-{#                                                   data-parsley-trigger="change"#}
-{#                                                   pattern="^[\d\+\-\.\(\)\/\s]*$"#}
-{#                                                   required>#}
-{#                                        </div>#}
-{##}
-{#                                        <div class="checkbox">#}
-{#                                            <label class="checkbox checkbox-custom">#}
-{#                                                <input type="checkbox" name="agree" id="agree"#}
-{#                                                       data-parsley-trigger="change"#}
-{#                                                       required>#}
-{#                                                <i></i> I agree to the <a href class="text-info">Terms of Service</a>#}
-{#                                            </label>#}
-{#                                        </div>#}
-
-{#                                <input type="submit" value="next">#}
 <div class="row", align="center" style="align-content: center">
 <input type="submit" class="btn btn-success" id="form1Submit" value="Next"></input>
 </div>

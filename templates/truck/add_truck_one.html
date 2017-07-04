@@ -7,7 +7,7 @@
 
                     <div class="pageheader">
 
-                        <h2>Add Truck<span>// You can place subtitle here</span></h2>
+                        <h2>Add Truck<span></span></h2>
 
                         <div class="page-bar">
 
@@ -16,7 +16,7 @@
                                     <a href="index.html"><i class="fa fa-home"></i> Ship Easy</a>
                                 </li>
                                 <li>
-                                    <a href="#">Add Truck One/Three</a>
+                                    <a href="#">Stape One</a>
                                 </li>
 {#                                <li>#}
 {#                                    <a href="form-wizard.html">Form Wizard</a>#}
@@ -27,7 +27,7 @@
 
                             <form name="form1" role="form" id="form1" action="/truck/add_truck_one_process/" method="post" enctype="multipart/form-data">{% csrf_token %}
                                 <div class="row">
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-4">
                                             <input type="text" id = id , name="id", value="{{truck_obj.id}}" hidden>
                                             <label for="username">Licanse Number </label>
                                             <input type="text" name="licanse_number" id="licanse_numbers" class="form-control"
@@ -35,18 +35,18 @@
                                                    onchange="unique_number()" value="{{ truck_obj.licanse_number }}"
                                                    required>
                                         </div>
-
-                                </div>
-                                        <div class="row">
-
-
-                                        <div class="form-group col-md-4">
+                                    <div class="form-group col-md-4">
                                             <label for="username">Truck OEM </label>
                                             <input type="text" name="truck_oem" id="truck_oem" class="form-control"
                                                    data-parsley-trigger="change"
                                                    data-parsley-range="[4, 20]", value="{{ truck_obj.truck_oem }}"
                                                    required>
                                         </div>
+
+                                </div>
+                                        <div class="row">
+
+
                                          <div class="form-group col-md-4">
                                             <label for="username">Truck Model</label>
                                             <input type="text" name="truck_model" id="truck_model" class="form-control"
@@ -57,7 +57,7 @@
                                             <div class="form-group col-md-4">
                                             <label for="username">wheels </label>
                                             <input type="text" name="wheels" id="wheels" class="form-control"
-                                                   data-parsley-trigger="change"
+                                                   data-parsley-trigger="change" pattern="[0-9]"
                                                    data-parsley-range="[4, 20]", value="{{ truck_obj.wheels }}"
                                                    required>
                                             </div>
@@ -73,8 +73,8 @@
                                                         data-parsley-trigger="change"
                                                         required>
                                                     <option value="{{ truck_obj.axle_type }}">{{ truck_obj.axle_type }}</option>
-                                                    <option value="foo">Foo</option>
-                                                    <option value="bar">Bar</option>
+                                                    <option value="Single">Single</option>
+                                                    <option value="Multi">Multi</option>
                                                 </select>
                                                 </div>
 
@@ -86,8 +86,12 @@
                                                         data-parsley-trigger="change"
                                                         required>
                                                     <option value="{{ truck_obj.truck_type }}">{{ truck_obj.truck_type }}</option>
-                                                    <option value="foo">Foo</option>
-                                                    <option value="bar">Bar</option>
+                                                    <option value="Open">Open</option>
+                                                    <option value="Close">Close</option>
+                                                    <option value="Semi close">Semi close</option>
+                                                    <option value="Container">Container</option>
+                                                    <option value="ReeFer">ReeFer</option>
+
                                                 </select>
                                                 </div>
 
@@ -96,17 +100,18 @@
 <div class="row">
 
     <div class="form-group col-md-3">
-        <label for="passwordConfirm">Licanse Upload: </label>
-        <input type="file" name="file1" id="licanse_upload" class="form-control"
-               required/>
+        <label for="passwordConfirm">Truck license Plate: </label>
+        <input type="file" name="file1" id="licanse_upload" class="form-control" value="{{ licen.link }}"
+               />
     </div>
 
     <div id="image-holder"></div>
 
     <div>
-        {% for image in pan %}
+        {% for image in licen %}
+            <div class="col-lg-3"><a href={{ image.link }}  target="_blank" class="fancybox"><img src="{{ image.link}}" height="100px", width="100px"/></a></div>
 
-            <img src="{{ image.link}}"alt="" height="100px", width="100px">
+{#            <img src="{{ image.link}}"alt="" height="100px", width="100px">#}
         {% endfor %}
 
 {#                                            <img class="img-circle" src="{% static "assets/images/arnold-avatar.jpg"%}" alt="">#}
@@ -116,15 +121,17 @@
     <div class="form-group col-md-3">
         <label for="passwordConfirm">ROC upload: </label>
         <input type="file" name="file2" id="roc" class="form-control"
-               required>
+               style="color: transparent">
     </div>
 
     <div id="image-holder2"></div>
 
     <div>
-        {% for image in adhar_pic %}
+        {% for image in roc %}
+            <div class="col-lg-3"><a href={{ image.link }}  target="_blank" class="fancybox"><img src="{{ image.link}}" height="100px", width="100px"/></a></div>
 
-            <img src="{{ image.link}}"alt="" height="100px", width="100px">
+
+{#            <img src="{{ image.link}}"alt="" height="100px", width="100px">#}
         {% endfor %}
     </div>
 </div>

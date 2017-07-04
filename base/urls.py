@@ -18,5 +18,11 @@ urlpatterns = [
     url('^edit_profile_two_process/$', views.edit_profile_two_process, name='edit_profile_two_process'),
     url('^edit_profile_three/$', views.edit_profile_three, name='edit_profile_three'),
     url('^edit_profile_three_process/$', views.edit_profile_three_process, name='edit_profile_three_process'),
+    url('^reset_password/$',views.password_reset, name="password_reset"),
+    url('^password_reset_process/$', views.password_reset_process, name='password_reset_process'),
+    url('^otp/$', views.otp, name="otp"),
+    url('^otp_check/$', views.otp_check, name="otp_check"),
+    url('^change_password/$', views.change_password, name="change_password"),
+    url('^change_password_process/$', views.change_password_process, name="change_password_process")
 
 ]

@@ -7,7 +7,7 @@
 
                     <div class="pageheader">
 
-                        <h2>Add Truck<span>// You can place subtitle here</span></h2>
+                        <h2>Add Truck<span></span></h2>
 
                         <div class="page-bar">
 
@@ -16,10 +16,10 @@
                                     <a href="index.html"><i class="fa fa-home"></i> Ship Easy</a>
                                 </li>
                                 <li>
-                                    <a href="#">Add Truck One/Three</a>
+                                    <a href="#">Step One</a>
                                 </li>
                                 <li>
-                                    <a href="#">Add Truck Two/Three</a>
+                                    <a href="#">Step Two</a>
                                 </li>
                             </ul>
 
@@ -30,16 +30,16 @@
                                     <div hidden><input type="text" name="id" value="{{ truck_id }}"></div>
                                     <div hidden><input type="text" name="update_id" value="{{ truck_obj.id }}"></div>
 
-                                    <div class="form-group col-md-4">
-                                         <label for="username">Truck Type:</label>
-                                                <select name="truck_type" class="form-control mb-10"
-                                                        data-parsley-trigger="change"
-                                                        required>
-                                                    <option value="{{ truck_obj.truck_type }}">{{ truck_obj.truck_type }}</option>
-                                                    <option value="foo">Foo</option>
-                                                    <option value="bar">Bar</option>
-                                                </select>
-                                                </div>
+{#                                    <div class="form-group col-md-4">#}
+{#                                         <label for="username">Truck Type:</label>#}
+{#                                                <select name="truck_type" class="form-control mb-10"#}
+{#                                                        data-parsley-trigger="change"#}
+{#                                                        required>#}
+{#                                                    <option value="{{ truck_obj.truck_type }}">{{ truck_obj.truck_type }}</option>#}
+{#                                                    <option value="foo">Foo</option>#}
+{#                                                    <option value="bar">Bar</option>#}
+{#                                                </select>#}
+{#                                                </div>#}
 
                                     <div class="form-group col-md-4">
                                          <label for="username">Capacity:</label>
@@ -47,8 +47,20 @@
                                                         data-parsley-trigger="change"
                                                         required>
                                                     <option value="{{ truck_obj.truck_capacity }}">{{ truck_obj.truck_capacity }}</option>
-                                                    <option value="foo">Foo</option>
-                                                    <option value="bar">Bar</option>
+                                                    <option value="1 Tons">1 Tons</option>
+                                                    <option value="2.5 Tons">2.5 Tons</option>
+                                                    <option value="5 Tons">5 Tons</option>
+                                                    <option value="7 Tons">7 Tons</option>
+
+                                                    <option value="9 Tons">9 Tons</option>
+
+                                                    <option value="12 Tons">12 Tons</option>
+
+                                                    <option value="16 Tons">16 Tons</option>
+                                                    <option value="21 Tons">21 Tons</option>
+
+
+
                                                 </select>
                                                 </div>
                                     <div class="form-group col-md-4">
@@ -57,8 +69,15 @@
                                                         data-parsley-trigger="change"
                                                         required>
                                                     <option value="{{ truck_obj.truck_lemgth }}">{{ truck_obj.truck_lemgth }}</option>
-                                                    <option value="foo">Foo</option>
-                                                    <option value="bar">Bar</option>
+                                                    <option value="8 feet">8 feet</option>
+                                                    <option value="10 feet">10 feet</option>
+                                                    <option value="12 feet">12 feet</option>
+                                                    <option value="18 feet">18 feet</option>
+                                                    <option value="20 feet">20 feet</option>
+                                                    <option value="22 feet">22 feet</option>
+                                                    <option value="24 feet">24 feet</option>
+                                                    <option value="32 feet">32 feet</option>
+
                                                 </select>
                                                 </div>
                                             </div>

@@ -7,7 +7,7 @@
 
                     <div class="pageheader">
 
-                        <h2>Add Truck<span>// You can place subtitle here</span></h2>
+                        <h2>Add Truck<span></span></h2>
 
                         <div class="page-bar">
 
@@ -16,13 +16,13 @@
                                     <a href="index.html"><i class="fa fa-home"></i> Ship Easy</a>
                                 </li>
                                <li>
-                                    <a href="#">Add Truck One/Three</a>
+                                    <a href="#">Step One</a>
                                 </li>
                                 <li>
-                                    <a href="#">Add Truck Two/Three</a>
+                                    <a href="#">Step Two</a>
                                 </li>
                                  <li>
-                                    <a href="#">Add Truck Three</a>
+                                    <a href="#">Step Three</a>
                                 </li>
                             </ul>
 
@@ -34,7 +34,7 @@
                                     <div hidden><input type="text" name="update_id" value="{{ truck_obj.id }}"></div>
 
                                             <div class="form-group col-md-4">
-                                            <label for="username">Owener Namer</label>
+                                            <label for="username">Owner Namer</label>
                                             <input type="text" name="owener_name" id="owener_name" class="form-control"
                                                   value="{{ truck_obj.owener_name }}"
                                                    required>
@@ -46,6 +46,12 @@
                                                     pattern="[789][0-9]{9}", value="{{ truck_obj.conatact }}"
                                                    required/>
                                         </div>
+                                    <div class="form-group col-md-4">
+                                            <label for="username">Fitness Till Date:</label>
+                                            <input type="text" name="date" id="datepicker" class="form-control"
+                                                   value="{{ set_det }}"
+                                                   required>
+                                            </div>
                                 </div>
 
                                         <div class="row">
@@ -55,18 +61,37 @@
 
                                                        required/>
                                             </div>
+
+                                             <div id="image-holder"></div>
+
+                                                <div>
+                                                    {% for image in pan_list %}
+                                                    <div class="col-lg-3"><a href={{ image.link }}  target="_blank" class="fancybox"><img src="{{ image.link}}" height="100px", width="100px"/></a></div>
+
+{#                                                  <img src="{{ image.link}}"alt="" height="100px", width="100px">#}
+                                                    {% endfor %}
+
+{#                                                  <img class="img-circle" src="{% static "assets/images/arnold-avatar.jpg"%}" alt="">#}
+                                                </div>
+
+
                                             <div class="form-group col-md-3">
                                                 <label for="passwordConfirm">Fitness upload: </label>
                                                 <input type="file" name="file2" id="fitnes" class="form-control"
 
                                                        required/>
                                             </div>
-                                            <div class="form-group col-md-4">
-                                            <label for="username">Dates:</label>
-                                            <input type="text" name="date" id="datepicker" class="form-control"
-                                                   value="{{ truck_obj.date_of_fitnace_certificate }}"
-                                                   required>
+                                            <div id="image-holder2"></div>
+
+                                            <div>
+                                            {% for image in fitnes_list %}
+                                                <div class="col-lg-3"><a href={{ image.link }}  target="_blank" class="fancybox"><img src="{{ image.link}}" height="100px", width="100px"/></a></div>
+
+
+{#                                               <img src="{{ image.link}}"alt="" height="100px", width="100px">#}
+                                            {% endfor %}
                                             </div>
+
                                         </div>
 
 {#            <div class="form-row">#}
@@ -126,41 +151,69 @@
                   });
               });
   </script>
-    <script>
-var file = document.getElementById('pan_upload');
-var file2 = document.getElementById('fitnes');
+     <script>
+    $(document).ready(function() {
+        $("#pan_upload").on('change', function() {
+          //Get count of selected files
+          var countFiles = $(this)[0].files.length;
+          var imgPath = $(this)[0].value;
+          var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
+          var image_holder = $("#image-holder");
+          image_holder.empty();
+          if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
+            if (typeof(FileReader) != "undefined") {
+              //loop for each file selected for uploaded.
+              for (var i = 0; i < countFiles; i++)
+              {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                  $("<img />", {
+                    "src": e.target.result,
+                    "class": "thumb-image"
+                  }).appendTo(image_holder);
+                }
+                image_holder.show();
+                reader.readAsDataURL($(this)[0].files[i]);
+              }
+            } else {
+              alert("This browser does not support FileReader.");
+            }
+          } else {
+            alert("Pls select only images");
+          }
+        });
 
-file.onchange = function(e){
-    var ext = this.value.match(/\.([^\.]+)$/)[1];
-    switch(ext)
-    {
-        case 'jpg':
-        case 'jpeg':
-        case 'bmp':
-        case 'png':
-        case 'tif':
 
-            break;
-        default:
-            alert('Please select Image File');
-            this.value='';
-    }
-};
-file2.onchange = function(e){
-    var ext = this.value.match(/\.([^\.]+)$/)[1];
-    switch(ext)
-    {
-        case 'jpg':
-        case 'jpeg':
-        case 'bmp':
-        case 'png':
-        case 'tif':
 
-            break;
-        default:
-            alert('Please select Image File');
-            this.value='';
-    }
-};
+        $("#fitnes").on('change', function() {
+          //Get count of selected files
+          var countFiles = $(this)[0].files.length;
+          var imgPath = $(this)[0].value;
+          var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
+          var image_holder = $("#image-holder2");
+          image_holder.empty();
+          if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
+            if (typeof(FileReader) != "undefined") {
+              //loop for each file selected for uploaded.
+              for (var i = 0; i < countFiles; i++)
+              {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                  $("<img />", {
+                    "src": e.target.result,
+                    "class": "thumb-image"
+                  }).appendTo(image_holder);
+                }
+                image_holder.show();
+                reader.readAsDataURL($(this)[0].files[i]);
+              }
+            } else {
+              alert("This browser does not support FileReader.");
+            }
+          } else {
+            alert("Pls select only images");
+          }
+        });
+      });
     </script>
 {% endblock %}

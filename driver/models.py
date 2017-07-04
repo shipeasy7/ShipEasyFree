@@ -15,6 +15,8 @@ class Driver_add(models.Model):
     reference_two = models.CharField(max_length=100, null=False,blank=False)
     address_one = models.CharField(max_length=100, null=False,blank=False)
     address_two = models.CharField(max_length=100, null=False,blank=False)
+    ref_moblie_one = models.CharField(max_length=100, null=True, blank=True)
+    ref_moblie_two = models.CharField(max_length=100, null=True, blank=True)
 
     pair_status = models.BooleanField(default=False)
     pair_with = models.CharField(max_length=100 , null=True)

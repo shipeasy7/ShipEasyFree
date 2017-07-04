@@ -23,6 +23,7 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime
 from django.core.mail import EmailMessage
+
 import json
 import os
 
@@ -116,6 +117,8 @@ def add_driver_two_process(request):
     p_two = request.POST.get('preference_two')
     a_one = request.POST.get('address_one')
     a_two = request.POST.get('address_two')
+    mobile_one = request.POST.get('mobile_number_one')
+    mobile_two = request.POST.get('mobile_number_two')
     update_id = request.POST.get('update_id')
     if update_id == "":
         try:
@@ -127,6 +130,8 @@ def add_driver_two_process(request):
             driver_obj.reference_two = p_two
             driver_obj.address_one =a_one
             driver_obj.address_two = a_two
+            driver_obj.ref_moblie_one = mobile_one
+            driver_obj.ref_moblie_two = mobile_two
             driver_obj.save()
         return HttpResponseRedirect('/driver/driver_table/?status=added')
     else:
@@ -139,6 +144,8 @@ def add_driver_two_process(request):
             driver_obj.reference_two = p_two
             driver_obj.address_one =a_one
             driver_obj.address_two = a_two
+            driver_obj.ref_moblie_one = mobile_one
+            driver_obj.ref_moblie_two = mobile_two
             driver_obj.save()
         return HttpResponseRedirect('/driver/driver_table/?status=edited')
 
@@ -151,7 +158,8 @@ def driver_table(request):
         message = "Added Suceess fully"
     elif status == "edited":
         message = "driver Info Edited"
-
+    elif status == "no":
+        message = "Driver Allready paird Please Unpair It to deleate "
     else:
         message = ""
     new_list = profile_for_all(request)
@@ -161,7 +169,8 @@ def driver_table(request):
 def all_driver(request):
     driver = []
     for item in Driver_add.objects.all().values('id', 'licen_number', 'driver_name', 'licaen_type',
-                                                'mobile_number', 'operator'):
+                                                'mobile_number', 'operator','reference_one',
+                                                'ref_moblie_one', 'reference_two', 'ref_moblie_two'):
         driver.append(item)
 
     data = json.dumps(driver)
@@ -218,7 +227,11 @@ def edit_driver_two(request, id):
 
 def delete_driver(request,id):
     driver_obj = Driver_add.objects.get(id = id)
-    driver_obj.delete()
+    if driver_obj.pair_status == True:
+        return HttpResponseRedirect('/driver/driver_table/?status=no')
+    else:
+
+        driver_obj.delete()
     return HttpResponseRedirect('/driver/driver_table')
 
 

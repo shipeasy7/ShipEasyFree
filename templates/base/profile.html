@@ -23,11 +23,11 @@
 
                             <ul class="page-breadcrumb">
                                 <li>
-                                    <a href="index.html"><i class="fa fa-home"></i> Minovate</a>
+                                    <a href="/base/profile/"><i class="fa fa-home"></i> {{ user_obj.company_name }}</a>
                                 </li>
 
                                 <li>
-                                    <a href="profile.html">Profile Page</a>
+                                    <a href="/base/profile/">Profile Page</a>
                                 </li>
                             </ul>
 
@@ -81,16 +81,16 @@
 
                                         <ul class="list-inline tbox m-0">
                                             <li class="tcol p-10">
-                                                <h2 class="m-0">695</h2>
-                                                <span class="text-transparent-white">Tweets</span>
+                                                <h2 class="m-0">{{ truck_count }}</h2>
+                                                <span class="text-transparent-white">Number Of Trucks</span>
                                             </li>
                                             <li class="tcol bg-blue dker p-10">
-                                                <h2 class="m-0">1 269</h2>
-                                                <span class="text-transparent-white">Followers</span>
+                                                <h2 class="m-0">{{ driver_count }}</h2>
+                                                <span class="text-transparent-white">Number Of Deiver</span>
                                             </li>
                                             <li class="tcol p-10">
-                                                <h2 class="m-0">369</h2>
-                                                <span class="text-transparent-white">Following</span>
+                                                <h2 class="m-0">{{ no_of_gps }}</h2>
+                                                <span class="text-transparent-white">Number Of GPS Tracking</span>
                                             </li>
                                         </ul>
 

@@ -16,10 +16,10 @@
                                     <a href="index.html"><i class="fa fa-home"></i> Ship Easy</a>
                                 </li>
                                 <li>
-                                    <a href="#">Add Driver one/two</a>
+                                    <a href="#">Step One</a>
                                 </li>
                                 <li>
-                                    <a href="#">Add Driver</a>
+                                    <a href="#">Step Two</a>
                                 </li>
                             </ul>
 
@@ -31,13 +31,13 @@
                                     <div hidden><input type="text" name="update_id" value="{{ driver_obj.id }}"></div>
 
                                             <div class="form-group col-md-4">
-                                            <label for="username">Preferance One:</label>
+                                            <label for="username">Reference One:</label>
                                             <input type="text" name="preference_one" id="preference_one" class="form-control"
                                                   value="{{ driver_obj.reference_one }}"
                                                    required>
                                         </div>
                                     <div class="form-group col-md-4">
-                                            <label for="username">Preferance Two:</label>
+                                            <label for="username">Reference Two:</label>
                                             <input type="text" name="preference_two" id="preference_two" class="form-control"
                                                    value="{{ driver_obj.reference_two }}"
                                                    required>
@@ -61,6 +61,20 @@
 
 
                                         </div>
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                            <label for="username">Mobile Number One:</label>
+                                            <input type="text" name="mobile_number_one" id="mobile_number" class="form-control"
+                                                   pattern="[789][0-9]{9}" value="{{ driver_obj.ref_moblie_one }}"
+                                                   required>
+                                        </div>
+                                    <div class="form-group col-md-4">
+                                            <label for="username">Mobile Number Two:</label>
+                                            <input type="text" name="mobile_number_two" id="mobile_number" class="form-control"
+                                                   pattern="[789][0-9]{9}" value="{{ driver_obj.ref_moblie_two }}"
+                                                   required>
+                                        </div>
+                                </div>
 
 
 

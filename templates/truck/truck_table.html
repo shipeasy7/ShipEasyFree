@@ -9,6 +9,7 @@
   <p id="message_body" align="center">{{ message }}</p>
 </div>
 
+
                 <div class="page page-tables-datatables">
 
                     <div class="pageheader">
@@ -43,41 +44,41 @@
 {#                            <!-- tile -->#}
                             <section class="tile">
 
-                                <!-- tile header -->
-                                <div class="tile-header dvd dvd-btm">
-                                    <h1 class="custom-font"><strong>Responsive</strong> Table</h1>
-                                    <ul class="controls">
-                                        <li class="dropdown">
-
-                                            <a role="button" tabindex="0" class="dropdown-toggle settings" data-toggle="dropdown">
-                                                <i class="fa fa-cog"></i>
-                                                <i class="fa fa-spinner fa-spin"></i>
-                                            </a>
-
-                                            <ul class="dropdown-menu pull-right with-arrow animated littleFadeInUp">
-                                                <li>
-                                                    <a role="button" tabindex="0" class="tile-toggle">
-                                                        <span class="minimize"><i class="fa fa-angle-down"></i>&nbsp;&nbsp;&nbsp;Minimize</span>
-                                                        <span class="expand"><i class="fa fa-angle-up"></i>&nbsp;&nbsp;&nbsp;Expand</span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a role="button" tabindex="0" class="tile-refresh">
-                                                        <i class="fa fa-refresh"></i> Refresh
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a role="button" tabindex="0" class="tile-fullscreen">
-                                                        <i class="fa fa-expand"></i> Fullscreen
-                                                    </a>
-                                                </li>
-                                            </ul>
-
-                                        </li>
-                                        <li class="remove"><a role="button" tabindex="0" class="tile-close"><i class="fa fa-times"></i></a></li>
-                                    </ul>
-                                </div>
-                                <!-- /tile header -->
+{#                                <!-- tile header -->#}
+{#                                <div class="tile-header dvd dvd-btm">#}
+{#                                    <h1 class="custom-font"><strong>Responsive</strong> Table</h1>#}
+{#                                    <ul class="controls">#}
+{#                                        <li class="dropdown">#}
+{##}
+{#                                            <a role="button" tabindex="0" class="dropdown-toggle settings" data-toggle="dropdown">#}
+{#                                                <i class="fa fa-cog"></i>#}
+{#                                                <i class="fa fa-spinner fa-spin"></i>#}
+{#                                            </a>#}
+{##}
+{#                                            <ul class="dropdown-menu pull-right with-arrow animated littleFadeInUp">#}
+{#                                                <li>#}
+{#                                                    <a role="button" tabindex="0" class="tile-toggle">#}
+{#                                                        <span class="minimize"><i class="fa fa-angle-down"></i>&nbsp;&nbsp;&nbsp;Minimize</span>#}
+{#                                                        <span class="expand"><i class="fa fa-angle-up"></i>&nbsp;&nbsp;&nbsp;Expand</span>#}
+{#                                                    </a>#}
+{#                                                </li>#}
+{#                                                <li>#}
+{#                                                    <a role="button" tabindex="0" class="tile-refresh">#}
+{#                                                        <i class="fa fa-refresh"></i> Refresh#}
+{#                                                    </a>#}
+{#                                                </li>#}
+{#                                                <li>#}
+{#                                                    <a role="button" tabindex="0" class="tile-fullscreen">#}
+{#                                                        <i class="fa fa-expand"></i> Fullscreen#}
+{#                                                    </a>#}
+{#                                                </li>#}
+{#                                            </ul>#}
+{##}
+{#                                        </li>#}
+{#                                        <li class="remove"><a role="button" tabindex="0" class="tile-close"><i class="fa fa-times"></i></a></li>#}
+{#                                    </ul>#}
+{#                                </div>#}
+{#                                <!-- /tile header -->#}
 
                                 <!-- tile body -->
                                 <div class="tile-body">
@@ -91,7 +92,7 @@
                                             <th>Type</th>
                                             <th>wheals</th>
 
-                                            <th class="none">Owener Name</th>
+                                                <th class="none">Owener Name</th>
                                             <th class="none">Axcel</th>
                                             <th class="none">Model</th>
                                             <th width="10%">Action</th>
@@ -153,9 +154,9 @@
           {
                $( "#dialog" ).dialog();
           }
-          else
+          else if (message === "no")
           {
-
+                $( "#dialog1" ).dialog();
           }
 
 
