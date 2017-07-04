@@ -29,7 +29,7 @@
                                 <div class="row">
                             <div class="col-md-4">
                                <label class="control-label">Select Truck</label>
-		                    <select name="truck" id="truck" class="form-control col-md-4">
+		                    <select name="truck" id="truck" class="form-control col-md-4" onchange="hide()">
 		                        <option value="">Select Truck</option>
                                     {% for i in truck %}
                         {#                <input type="text" value="{{ i.id }}">#}
@@ -43,7 +43,7 @@
 
 
 
-		                    <select name="driver" id="driver" class="form-control">
+		                    <select name="driver" id="driver" class="form-control" onchange="hide_two()">
 		                        <option value="">Select Driver</option>
                                     {% for i in driver %}
                         {#                <input type="text" value="{{ i.id }}">#}
@@ -96,5 +96,62 @@
 
             </section>
 
+
+{% endblock %}
+
+{% block scripts %}
+  <script type="text/javascript">
+            $(document).ready(function () {
+
+             });
+                function hide() {
+                    {#                var x = document.getElementById("truck_id").value;#}
+                    var licanse_numbers = $('#truck').val();
+
+
+
+                    $.ajax({
+                        type: 'GET',
+                        url: '/truck_driver_pair/find_driver_name/' + licanse_numbers,
+                        dataType: 'json',
+                        data: {paramVal: licanse_numbers},
+                        success: function (data) {
+
+
+                            $("#driver").val(data);
+{#                            $("#operator").val(data[1]);#}
+
+
+                        }
+                    });
+
+
+                }
+
+                function hide_two() {
+                    {#                var x = document.getElementById("truck_id").value;#}
+                    var licanse_numbers = $('#driver').val();
+
+
+
+                    $.ajax({
+                        type: 'GET',
+                        url: '/truck_driver_pair/find_truck_licen/' + licanse_numbers,
+                        dataType: 'json',
+                        data: {paramVal: licanse_numbers},
+                        success: function (data) {
+
+
+                            $("#truck").val(data);
+{#                            $("#operator").val(data[1]);#}
+
+
+                        }
+                    });
+
+
+                }
+
+        </script>
 
 {% endblock %}
