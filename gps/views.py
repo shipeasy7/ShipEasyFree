@@ -31,7 +31,7 @@ import time
 import threading
 from driver.models import Driver_add
 from truck.models import Truck_data
-from gps.models import Aproved_mobile_number, GPS_status
+from gps.models import Aproved_mobile_number, GPS_status, RowData
 
 from base.views import profile_for_all
 
@@ -39,7 +39,18 @@ from base.views import profile_for_all
 def gps_licen_input(request):
     user = request.session.get('user')
     new_list = profile_for_all(request)
-    return render(request,'gps/gps_input_form.html',{'user':user,'new_list':new_list})
+    truck = []
+    truck_obj = Truck_data.objects.filter().values('id','licanse_number','mobile_number')
+    for item in truck_obj:
+        truck.append(item)
+    print("==========================",truck)
+    driver = []
+    driver_obj = Driver_add.objects.filter().values('id','driver_name','licen_number')
+    for item in driver_obj:
+        driver.append(item)
+    print(driver)
+
+    return render(request,'gps/gps_input_form.html',{'user':user,'new_list':new_list, 'truck':truck,'driver':driver})
 
 
 def driver_mobile_number(request, number):
@@ -83,6 +94,11 @@ def print_form(request):
             print("in Truck")
             if get_oerator == "Airtel":
                 return render(request,'operator_forms/airtel_form.html',{'date': date, 'obj':truck_obj})
+            elif get_oerator == "Vodafone":
+                return render(request,'operator_forms/vodaphone.html',{'date': date, 'obj':truck_obj})
+            elif get_oerator == "Idea":
+                return render(request,'operator_forms/idea.html',{'date': date, 'obj':truck_obj})
+
     else:
         pass
 
@@ -93,8 +109,14 @@ def print_form(request):
         except ObjectDoesNotExist:
             driver_obj == None
         if driver_obj != None:
-            if get_oerator == "Artel":
+            if get_oerator == "Airtel":
                 return render(request, 'operator_forms/airtel_form.html',{'date':date, 'obj':driver_obj})
+            elif get_oerator == "Vodafone":
+                return render(request, 'operator_forms/vodaphone.html', {'date': date, 'obj': driver_obj})
+            elif get_oerator == "Idea":
+                return render(request, 'operator_forms/idea.html', {'date': date, 'obj': driver_obj})
+
+
             else:
                 pass
 
@@ -140,8 +162,8 @@ def mail_documents(request):
             file1 = request.FILES['file1']
             file1str = file1.read()
             file_type = str(request.FILES['file1'].content_type)
-            email_msg = EmailMessage(subject="Activate user", body="Activate user",
-                                     from_email="gauravbole2@gmail.com", to=["gauravbole94@gmail.com"])
+            email_msg = EmailMessage(subject="Activate user Mobile Number To Track", body="Activate user",
+                                     from_email="support@shipeasy.in", to=["sales@shipeasy.in"])
             # need to try to attach the file, using the attach method
             try:
                 email_msg.attach('file1', file1str, file_type)
@@ -247,3 +269,29 @@ def display_lat_long(request):
 
     print("=====================",lat_long)
     return render(request, 'gps/gps_table.html', {"data" : lat_long ,'user': user, 'new_list':new_list })
+
+
+def gps_lat_long(request):
+    mobile_number = request.POST.get('search')
+    print("--------------------", mobile_number)
+    row_mobile = RowData.objects.filter(mobile_number=mobile_number).values('lat', 'long')
+
+    print("----", row_mobile)
+    if row_mobile.exists():
+        main = []
+        h = []
+        g = []
+        row_data_obj = RowData.objects.all().values('lat', 'long')
+        print(row_data_obj)
+        for i in row_data_obj:
+            h.append(i['lat'])
+            g.append(i['long'])
+        for a, b in zip(g, h):
+            main.append([b, a])
+
+        print("=====================+", main)
+        return render(request, 'gps/google_map.html', {'x': main})
+
+    else:
+        main = [[19.111202, 72.870912], [19.111202, 72.870912]]
+        return render(request, 'gps/google_map.html', {'x': main})

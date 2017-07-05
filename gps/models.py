@@ -18,6 +18,15 @@ class GPS_status(models.Model):
 
 class Aproved_mobile_number(models.Model):
     mobile_number = models.CharField(max_length=100, null=True, blank=True)
+    activation_status = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.mobile_number
+
+class RowData(models.Model):
+    mobile_number = models.CharField(max_length=100, null=False, blank=False)
+    lat = models.FloatField(max_length=100, null=False, blank=False)
+    long = models.FloatField(max_length=100, null=False, blank=False)
 
     def __str__(self):
         return self.mobile_number

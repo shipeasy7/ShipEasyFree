@@ -1,0 +1,190 @@
+<html>
+<head>
+{% load staticfiles %}
+  <title>Google Maps Multiple Markers</title>
+     <link rel="stylesheet" href="{% static "map.css" %}">
+  <script src="http://maps.google.com/maps/api/js?key=AIzaSyBVZNwzVggBwSX7LzJ0JGAvAN4mC_Bh9sQ&v=3.exp&sensor=false" type="text/javascript"></script>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+</head>
+<body>
+<form action="/gps/gps_lat_long/" method="post">{% csrf_token %}
+<input id="pac-input" class="controls" type="text" name="search" placeholder="Search Box" required>
+    <input type="submit">
+    </form>
+{#<input id="pac-input" class="controls" type="text" placeholder="Search Box">#}
+  <div id="map" style="height: 500px; width: 1300px;">
+</div>
+<script type="text/javascript">
+{#          var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';#}
+{#      var labelIndex = 0;#}
+{##}
+{##}
+{##}
+{# function initialize() {#}
+{##}
+{##}
+{#     google.maps.event.addListener(map, 'click', function (event) {#}
+{#         addMarker(event.latLng, map);#}
+{#     });#}
+{##}
+{##}
+{# };#}
+{##}
+{##}
+{##}
+{#    var locations = [#}
+{#      [19.050428, 72.9098704],#}
+{#      [19.0472208, 72.846297],#}
+{#      [19.033509, 72.8654373],#}
+{#      [19.033509, 72.8654373],#}
+{#      [-33.950198, 151.259302]#}
+{#    ];#}
+{#var jsonResult;#}
+{#$.ajax({#}
+{#  dataType: "json",#}
+{#  url: /row_data/,#}
+{##}
+{#  data: data,#}
+{#  success: function(data) {#}
+{#       jsonResult = data;#}
+{#    }#}
+{#{);#}
+{#var gau = {{ x }};#}
+{#var locations = {{ x }};#}
+{##}
+{#    var map = new google.maps.Map(document.getElementById('map'), {#}
+{#      zoom: 14,#}
+{#      center: new google.maps.LatLng(28.445307,77.100235),#}
+{#      mapTypeId: google.maps.MapTypeId.ROADMAP#}
+{#    });#}
+{##}
+{#    var infowindow = new google.maps.InfoWindow();#}
+{##}
+{#    var marker, i;#}
+{##}
+{#    for (i = 0; i < locations.length; i++) {#}
+{#      marker = new google.maps.Marker({#}
+{#        position: new google.maps.LatLng(locations[i][0], locations[i][1]),#}
+{#        animation: google.maps.Animation.DROP,#}
+{##}
+{#        map: map#}
+{#      });#}
+{##}
+{#      google.maps.event.addListener(marker, 'click', (function(marker, i) {#}
+{#        return function() {#}
+{#          infowindow.setContent(locations[i][0]);#}
+{#          infowindow.open(map, marker);#}
+{#        }#}
+{#      })(marker, i));#}
+{##}
+{#              // Adds a marker to the map.#}
+{#      function addMarker(location, map) {#}
+{#        // Add the marker at the clicked location, and add the next-available label#}
+{#        // from the array of alphabetical characters.#}
+{#        var marker = new google.maps.Marker({#}
+{#          position: location,#}
+{#          label: labels[labelIndex++ % labels.length],#}
+{#          draggable:true,#}
+{#          map: map#}
+{#        });#}
+{#        var latitide = marker.getPosition().lat();#}
+{#        var longitude = marker.getPosition().lng();#}
+{#        alert(latitide);#}
+{##}
+{#      }#}
+{##}
+{##}
+{#google.maps.event.addDomListener(window, 'load', initialize);#}
+{##}
+{##}
+{#    }#}
+{##}
+{#        google.maps.event.addListener(marker, 'dragend', function(marker){#}
+{#        var latLng = marker.latLng;#}
+{#        currentLatitude = latLng.lat();#}
+{#        currentLongitude = latLng.lng();#}
+{#        x= jQ("#latitude").val(currentLatitude);#}
+{#        jQ("#longitude").val(currentLongitude);#}
+{#     });#}
+{##}
+{#google.maps.event.addListener(marker, 'drag', function(event){#}
+{#       document.getElementById("latbox").value = event.latLng.lat();#}
+{#       document.getElementById("lngbox").value = event.latLng.lng();#}
+{#});#}
+{#    alert(latitide);#}
+{#alert(longitude);#}
+
+var geocoder;
+var map;
+var directionsDisplay;
+var directionsService = new google.maps.DirectionsService();
+{#var locations =  [#}
+{#        [28.445307,77.100235,"1"],#}
+{#        [28.442288,	77.10292,"2"],#}
+{#        [28.436440, 77.102764,"3"],#}
+{#        [28.428632, 77.104827,"4"],#}
+{#        [28.417787, 77.102601,"5"],#}
+{#        [28.416644, 77.0932,"6"],#}
+{##}
+{#        ]#}
+var locations = {{ x }};
+
+
+function initialize() {
+  directionsDisplay = new google.maps.DirectionsRenderer();
+
+
+  var map = new google.maps.Map(document.getElementById('map'), {
+
+{#    minZoom : 9,#}
+{#    maxZoom :15,#}
+    center: new google.maps.LatLng(locations[0][0],locations[0][1]),
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  });
+  directionsDisplay.setMap(map);
+  var infowindow = new google.maps.InfoWindow();
+
+  var marker, i;
+  var request = {
+    travelMode: google.maps.TravelMode.DRIVING
+  };
+  for (i = 0; i < locations.length; i++) {
+    marker = new google.maps.Marker({
+      position: new google.maps.LatLng(locations[i][0], locations[i][1]),
+        label: "markerLabel"
+
+
+    });
+
+    google.maps.event.addListener(marker, 'click', (function(marker, i) {
+      return function() {
+{#        infowindow.setContent(locations[i][2]);#}
+        infowindow.open(map, marker);
+      }
+    })(marker, i));
+
+    if (i == 0) request.origin = marker.getPosition();
+    else if (i == locations.length - 1) request.destination = marker.getPosition();
+    else {
+      if (!request.waypoints) request.waypoints = [];
+      request.waypoints.push({
+        location: marker.getPosition(),
+
+
+        stopover:true
+      });
+    }
+
+  }
+  directionsService.route(request, function(result, status) {
+    if (status == google.maps.DirectionsStatus.OK) {
+      directionsDisplay.setDirections(result);
+    }
+  });
+}
+google.maps.event.addDomListener(window, "load", initialize);
+
+
+  </script>
+</body>
+</html>

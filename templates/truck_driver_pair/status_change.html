@@ -51,9 +51,11 @@
                                 <div class="row">
                                       <h6 class="title-style-1 no-border">Status</h6>
 
-                                                                <input type="color" id="myColor" {% if status == True %}  value = "#48f442" {% else %} value = "#db0424"  {% endif%} disabled>
+                                                                <input type="color" id="myColor" {% if maintance_status == True %}  value = "#9b280f" {% elif empty_status == True %} value = "#3ce716"
+                                                                {% elif breakdown_status == True %} value = "#000100" {% elif shipment_status == True %} value = "#ea3f19"
+                                                                 {% endif%} disabled>
 
-                                                        <div id="active">
+                                                        <div id="active1">
 
                                                                  <input type="radio" id="r1" name="active" value="maintain" {% if maintance_status == True %}  checked {% endif%} > Maintan
                                                                 <input type="radio" id="r2" name="active" value="empty"  {% if empty_status == True %}  checked {% endif%}> empty
@@ -122,8 +124,11 @@
 
     <script type="text/javascript">
 {#        $(document).ready(function () {#}
+{#            alert("hi");#}
+{#            var radios = document.getElementsByName('active');#}
+{#            alert(radios);#}
 {#            $('#form1  input').on('change', function () {#}
-{#                data = ($('input[name=active]:checked', '#form1').val());#}
+{#                data = ($('input[name=active]:checked', '#active').val());#}
 {#                if (data == 'activate') {#}
 {#                    document.getElementById("myColor").value = "#48f442";#}
 {#                }#}
@@ -134,55 +139,101 @@
 {#            });#}
 {#        });#}
 
+    document.form1.onclick = function(){
+        var radVal = document.form1.active.value;
+{#        alert(radVal);#}
+{#        result.innerHTML = 'You selected: '+radVal;#}
+        if (radVal == "maintain")
+        {
+            document.getElementById("myColor").value = "#9b280f";
+
+        }
+        else if(radVal == "empty")
+        {
+         document.getElementById("myColor").value = "#3ce716";
+        }
+        else if(radVal == "breakdown")
+        {
+            document.getElementById("myColor").value = "#000100";
+        }
+        else if(radVal == "shipment")
+        {
+
+                    document.getElementById("myColor").value = "#ea3f19";
+        }
+
+
+        }
+
+
+
+
+
+{#var radios = document.getElementsByName('active');#}
+{##}
+{#for (var i = 0, length = radios.length; i < length; i++) {#}
+{#    if (radios[i].checked) {#}
+{#        // do whatever you want with the checked radio#}
+{#        alert(radios[i].value);#}
+{##}
+{#        // only one radio can be logically checked, don't check the rest#}
+{#        break;#}
+{#    }#}
+{#}#}
 
 window.count=0;
 add_new_entry();
 
-function add_new_entry()
-{
+function add_new_entry() {
 
-{#row_data = '<div class="panel panel-flat card"><div class="row"><div class="col-md-2"><label>From </label> <input type="text" id="from_'+window.count+'" name="from_date_'+window.count+'" class="form-control"></div> <div class="col-md-2"><label>To  </label> <input type="text" id="to_'+window.count+'" name="to_date_'+window.count+'" class="form-control date_pick"> </div><div class="col-md-4"><label>Name of Company </label><input type="text" class="form-control" name="name_of_company_'+window.count+'" pattern="[A-Za-z \,\.0-9]+" ></div><div class="col-md-2"> <label>City </label><input type="text" class="form-control" pattern="[A-Za-z -]+" name="city_'+window.count+'" > </div><div class="col-md-2"><label>Industry / Business</label><input type="text" class="form-control" pattern="[A-Za-z \,\.0-9]+" name="industry_'+window.count+'"></div><div class="col-md-4"><label>Job Title: </label><input type="text" class="form-control" pattern="[A-Za-z \,\.]+" name="job_title_'+window.count+'" ></div> <div class="col-md-3"> <label>Responsibilities: </label> <input type="text" class="form-control " pattern="[A-Za-z \,\.]+" name="responsibilities_'+window.count+'" ></div> <div class="col-md-3"> <label>Previous Salary Per Annum: </label> <input type="number" class="form-control " pattern="[0-9]{4:13}" name="salary_'+window.count+'" ></div></div>'#}
-row_data = '<div class="row">'+
-                '<div class="form-group col-md-4">'+
-                    '<label for="username">City From</label>'+
-                    '<input type="text" name="form_'+window.count+'" id="form_'+window.count+'" class="form-control" required>'+
-            '</div>'+
-            '<div class="form-group col-md-4">'+
-                                            '<label for="username">City To:</label>'+
-                                            '<input type="text" name="to_'+window.count+'" id="to_'+window.count+'" class="form-control" required>'+
-                                        '</div>'+
-                                    '<div class="form-group col-md-4">'+
-                                            '<label for="username">Customer Name</label>'+
-                                            '<input type="text" name="customer_name_'+window.count+'" id="customer_name_'+window.count+'" class="form-control" required>'+
-                                        '</div>'+
+    {#row_data = '<div class="panel panel-flat card"><div class="row"><div class="col-md-2"><label>From </label> <input type="text" id="from_'+window.count+'" name="from_date_'+window.count+'" class="form-control"></div> <div class="col-md-2"><label>To  </label> <input type="text" id="to_'+window.count+'" name="to_date_'+window.count+'" class="form-control date_pick"> </div><div class="col-md-4"><label>Name of Company </label><input type="text" class="form-control" name="name_of_company_'+window.count+'" pattern="[A-Za-z \,\.0-9]+" ></div><div class="col-md-2"> <label>City </label><input type="text" class="form-control" pattern="[A-Za-z -]+" name="city_'+window.count+'" > </div><div class="col-md-2"><label>Industry / Business</label><input type="text" class="form-control" pattern="[A-Za-z \,\.0-9]+" name="industry_'+window.count+'"></div><div class="col-md-4"><label>Job Title: </label><input type="text" class="form-control" pattern="[A-Za-z \,\.]+" name="job_title_'+window.count+'" ></div> <div class="col-md-3"> <label>Responsibilities: </label> <input type="text" class="form-control " pattern="[A-Za-z \,\.]+" name="responsibilities_'+window.count+'" ></div> <div class="col-md-3"> <label>Previous Salary Per Annum: </label> <input type="number" class="form-control " pattern="[0-9]{4:13}" name="salary_'+window.count+'" ></div></div>'#}
+    row_data = '<div class="row">' +
+        '<div class="form-group col-md-4">' +
+        '<label for="username">City From</label>' +
+        '<input type="text" name="form_' + window.count + '" id="form_' + window.count + '" class="form-control" required>' +
+        '</div>' +
+        '<div class="form-group col-md-4">' +
+        '<label for="username">City To:</label>' +
+        '<input type="text" name="to_' + window.count + '" id="to_' + window.count + '" class="form-control" required>' +
+        '</div>' +
+        '<div class="form-group col-md-4">' +
+        '<label for="username">Customer Name</label>' +
+        '<input type="text" name="customer_name_' + window.count + '" id="customer_name_' + window.count + '" class="form-control" required>' +
+        '</div>' +
 
-                                '</div>'+
-                            '<div class="row">'+
-                                '<div class="form-group col-md-4">'+
-                                            '<label for="username">ShipMent ID</label>'+
-                                            '<input type="text" name="shipment_id_'+window.count+'" id="shipment_id_'+window.count+'" class="form-control" required>'+
-                                '</div>'+
+        '</div>' +
+        '<div class="row">' +
+        '<div class="form-group col-md-4">' +
+        '<label for="username">ShipMent ID</label>' +
+        '<input type="text" name="shipment_id_' + window.count + '" id="shipment_id_' + window.count + '" class="form-control" required>' +
+        '</div>' +
 
-                                '<div class="form-group col-md-4">'+
-                                            '<label for="username">Contact</label>'+
-                                            '<input type="text" name="contact_'+window.count+'" id="contact_'+window.count+'" class="form-control" required>'+
-                                '</div>'+
-                            '</div>'
+        '<div class="form-group col-md-4">' +
+        '<label for="username">Contact</label>' +
+        '<input type="text" name="contact_' + window.count + '" id="contact_' + window.count + '" class="form-control" required>' +
+        '</div>' +
 
-  $('#id_parent').append(row_data);
-document.getElementById("insert").value = window.count;
+        '<div class="form-group col-md-4">' +
+        '<label for="username">Invoice Id</label>' +
+        '<input type="text" name="invoice_id_' + window.count + '" id="contact_' + window.count + '" class="form-control" required>' +
+        '</div>' +
+        '</div>'
 
-window.count=window.count+1;
+    $('#id_parent').append(row_data);
+    document.getElementById("insert").value = window.count;
 
-function init() {
-                var input = document.getElementById('form_'+window.count);
-{#                var input = document.getElementById('to_'+window.count);#}
-
-                var autocomplete = new google.maps.places.Autocomplete(input);
-                    }
-
-            google.maps.event.addDomListener(window, 'load', init);
+    window.count = window.count + 1;
 }
+
+{#function init() {#}
+{#                var input = document.getElementById('form_'+window.count);#}
+{#                var input = document.getElementById('to_'+window.count);#}
+{##}
+{#                var autocomplete = new google.maps.places.Autocomplete(input);#}
+{#                    }#}
+{##}
+{#            google.maps.event.addDomListener(window, 'load', init);#}
+{#}#}
 
 </script>
 

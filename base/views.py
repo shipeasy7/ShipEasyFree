@@ -51,19 +51,22 @@ def registration_process(request):
     print(new_user.id)
     subject = "testing"
     message = "Please Click on link to activate your account:http://127.0.0.1:8000/base/activete_user/"+str(new_user.id)
-    email = EmailMessage(subject, message, "gauravbole2@gmail.com", [email_id])  # emp_id['email]
+    email = EmailMessage(subject, message, "support@shipeasy.in", [email_id])  # emp_id['email]
     email.send()
     new_user_add = Add_user.objects.create(user_name = new_user, company_name = transport_company_name,
                                            mobile_number = mobile_number, email = email_id)
     return HttpResponse("Please Check Your Email To activation")
 
 ###### After click on url which is send on mail the user will be active
+
+
 def activete_user(request,id):
     print(id)
     user_obj = User.objects.get(id = id)
     user_obj.is_active = True
     user_obj.save()
     return HttpResponseRedirect('/base/login/')
+
 
 def login(request):
     login_status = (request.GET.get('status'))
@@ -106,6 +109,7 @@ def login_process(request):
 def base(request):
     new_list = profile_for_all(request)
     return render(request, 'home.html', {'user': request.session.get('user')})
+
 
 def profile(request):
     user = request.session.get('user')
@@ -165,6 +169,7 @@ def edit_profile_one(request):
     print("------------",user_obj)
     return render(request, 'base/edit_profile_one.html' , {"user": user, 'company_name':add_user_obj.company_name,
                                                            'user_name':user, 'new_list':new_list})
+
 
 def edit_profile_one_process(request):
     user_session_id = request.session.get('user')

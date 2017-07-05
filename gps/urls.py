@@ -12,6 +12,7 @@ urlpatterns = [
     url('^mail_documents/$', views.mail_documents, name='mail_documents'),
 
     url('^tracking_device/$',views.tracking_device, name='tracking'),
-    url('^display_lat_long/$', views.display_lat_long, name='display_lat_long')
+    url('^display_lat_long/$', views.display_lat_long, name='display_lat_long'),
+    url('^gps_lat_long/$', views.gps_lat_long, name="gps_lat_long")
 
 ]

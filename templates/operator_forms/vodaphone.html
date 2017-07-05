@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 5px;
+    text-align: left;
+}
+</style>
+    <meta charset="UTF-8">
+    <title>Vodaphone Form</title>
+</head>
+<body>
+<div id="print-content">
+    <p align="center"><b>Consent Letter</b></p>
+<p align="center"><b>Authorization from End User who is being tracked</b></p><br>
+To,<br>
+Vodafone<br><br>
+    <b>Ref:</b> DOT Letter bearing no 10-07/2009-AS-III/Vodafone/ (168)/359 dated 10th May 2011<br><br>
+    <b>Sub:</b> Authorization for tracking and providing location details of Mobile Connection Nos.as per below<br><br>
+I hereby provide my consent to enrol to Vodafone Location Tracking Services from<br>
+Vodafone and its affiliates (Vodafone) and allow access of my MSISDN location<br>
+information to Persistent Systems Limited (Persistent). I have been explained the terms<br>
+of the service and I am aware that my mobile number(s) will be tracked for business<br>
+reasons. I completely exonerate Vodafone and Persistent from any claims due to breach<br>
+of privacy obligations.<br>
+    <table style="width:100%">
+  <tr>
+    <th>Sr.
+No.</th>
+    <th>Name of the end user
+(Complete)</th>
+      <th>MSISDN (Mobile Number)</th>
+      <th>Track till
+(Optional)</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>{{ obj.owener_name }}{{ obj.driver_name }}</td>
+    <td>{{ obj.mobile_number }}</td>
+  </tr>
+</table>
+</br>
+ Yours Truly,<br><br><br>
+Signature of the End User<br><br>
+<b>Name:</b><br><br>
+<b>Date:{{ date }}</b><br><br>
+
+  <input type="button" onclick="printDiv('print-content')" value="print!"/>
+</div>
+
+
+
+<script type="text/javascript">
+
+function printDiv(divName) {
+
+ var printContents = document.getElementById(divName).innerHTML;
+ w=window.open();
+ w.document.write(printContents);
+ w.print();
+ w.close();
+}
+</script>
+</body>
+</html>

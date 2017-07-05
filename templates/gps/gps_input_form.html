@@ -29,20 +29,29 @@
                                 <div class="row">
                                     <div hidden><input type="text" name="id" value="{{ id }}"></div>
 
-                                            <div class="form-group col-md-4" id = "truck_id_div">
-                                            <label for="username">Enter Truck license</label>
-                                          <input id="tags" type="text" name="truck"  class="form-control"
-                                                  onchange="onAssociateChange()"
-                                                   />
+                                    <div class="col-md-4" id="truck_div">
+                               <label class="control-label">Select Truck</label>
+		                    <select name="truck" id="truck" class="form-control col-md-4" onchange="onAssociateChange()">
+		                        <option value="">Select Driver</option>
+                                    {% for i in truck %}
+                        {#                <input type="text" value="{{ i.id }}">#}
+                                        <option value="{{ i.licanse_number }}" >{{ i.licanse_number }}</option>
+                                    {% endfor %}
+                                    </select>
+                            </div>
+                                                                 <div class="col-md-4" id = "drive_div">
+                                    <label class="control-label">Select Driver</label>
 
-                                        </div>
-                                    <div class="form-group col-md-4" id = truck_drive_div>
-                                            <label for="username">Enter Driver Name</label>
-                                            <input id="driver" type="text" name="driver" class="form-control"
-                                                    onchange="onDriverChange()"
-                                                   />
 
-                                        </div>
+
+		                    <select name="driver" id="driver" class="form-control" onchange="onDriverChange()">
+		                        <option value="">Select Driver</option>
+                                    {% for i in driver %}
+                        {#                <input type="text" value="{{ i.id }}">#}
+                                        <option value="{{ i.licen_number }}" >{{ i.driver_name }}</option>
+                                    {% endfor %}
+                                    </select>
+                                </div>
                                 </div>
 
                                 <div class="row">
@@ -156,9 +165,9 @@
              });
                 function onAssociateChange() {
                     {#                var x = document.getElementById("truck_id").value;#}
-                    var user_id = $('#tags').val();
+                    var user_id = $('#truck').val();
 
-                    var relation = document.getElementById("truck_drive_div");
+                    var relation = document.getElementById("drive_div");
 
                     if(user_id !== "")
                     {
@@ -193,7 +202,7 @@
                     {#                var x = document.getElementById("truck_id").value;#}
                     var user_id = $('#driver').val();
 
-                    var relation = document.getElementById("truck_id_div");
+                    var relation = document.getElementById("truck_div");
 
                     if(user_id !== "")
                     {
