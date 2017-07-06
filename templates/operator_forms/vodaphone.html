@@ -50,21 +50,21 @@ Signature of the End User<br><br>
 <b>Name:</b><br><br>
 <b>Date:{{ date }}</b><br><br>
 
-  <input type="button" onclick="printDiv('print-content')" value="print!"/>
+{#  <input type="button" onclick="printDiv('print-content')" value="print!"/>#}
 </div>
 
 
 
-<script type="text/javascript">
+{#<script type="text/javascript">#}
 
-function printDiv(divName) {
-
- var printContents = document.getElementById(divName).innerHTML;
- w=window.open();
- w.document.write(printContents);
- w.print();
- w.close();
-}
-</script>
+{#function printDiv(divName) {#}
+{##}
+{# var printContents = document.getElementById(divName).innerHTML;#}
+{# w=window.open();#}
+{# w.document.write(printContents);#}
+{# w.print();#}
+{# w.close();#}
+{#}#}
+{#</script>#}
 </body>
 </html>

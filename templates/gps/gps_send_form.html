@@ -28,30 +28,40 @@
 
                             <form name="form1" role="form" id="form1" action="/gps/mail_documents/" method="post" enctype="multipart/form-data">{% csrf_token %}
                                 <div class="row">
-                            <div class="col-md-4">
-                               <label class="control-label">Select Driver Mobile Number</label>
-		                    <select name="truck" id="truck" class="form-control col-md-4">
-		                        <option value="None">Select Driver Mobile Number</option>
-                                    {% for i in driver %}
+{#                            <div class="col-md-4" id = "driver_div">#}
+{#                               <label class="control-label">Select Driver </label>#}
+{#		                    <select name="driver" id="driver" class="form-control col-md-4" onchange="onAssociateChange()">#}
+{#		                        <option value="None">Select Driver</option>#}
+{#                                    {% for i in driver %}#}
                         {#                <input type="text" value="{{ i.id }}">#}
-                                        <option value="{{ i.mobile_number }}" >{{ i.mobile_number }}</option>
+{#                                        <option value="{{ i.mobile_number }}" >{{ i.driver_name }}</option>#}
+{#                                    {% endfor %}#}
+{#                                    </select>#}
+{#                            </div>#}
+
+                                <div class="col-md-4" id = "truck_div">
+                                    <label class="control-label">Select Truck</label>
+
+		                    <select name="truck" id="truck" class="form-control" onchange="onDriverChange()">
+		                        <option value="None">Select Truck</option>
+                                    {% for i in truck %}
+                        {#                <input type="text" value="{{ i.id }}">#}
+                                        <option value="{{ i.mobile_number }}" >{{ i.licanse_number }}</option>
+                                    {% endfor %}
+                                    </select>
+                                </div>
+
+                                                    <div class="col-md-4" id = "driver_div">
+                               <label class="control-label">Select Driver </label>
+		                    <select name="driver" id="driver" class="form-control col-md-4" onchange="onAssociateChange()">
+		                        <option value="None">Select Driver</option>
+                                    {% for i in driver %}
+{#                                        <input type="text" value="{{ i.id }}">#}
+                                        <option value="{{ i.mobile_number }}" >{{ i.driver_name }}</option>
                                     {% endfor %}
                                     </select>
                             </div>
 
-                                <div class="col-md-4">
-                                    <label class="control-label">Select Truck Mobile Number</label>
-
-
-
-		                    <select name="driver" id="driver" class="form-control">
-		                        <option value="None">Select Truck Mobile Number</option>
-                                    {% for i in truck %}
-                        {#                <input type="text" value="{{ i.id }}">#}
-                                        <option value="{{ i.mobile_number }}" >{{ i.mobile_number }}</option>
-                                    {% endfor %}
-                                    </select>
-                                </div>
                                         </div>
 {#                    <input type="file" name="file1"/>#}
                             <div class="row">
@@ -65,33 +75,6 @@
                                             </div>
                             </div>
 
-{#            <div class="form-row">#}
-{#                <label>#}
-{#                    <span>Birth Date</span>#}
-{#                    <input type="text" name="dob" id="datepicker"  required>#}
-{#                </label>#}
-{#            </div>#}
-
-
-
-{#                                        <div class="form-group">#}
-{#                                            <label for="phone">Phone: </label>#}
-{#                                            <input type="text" name="phone" id="phone" class="form-control" placeholder="(XXX) XXXX XXX"#}
-{#                                                   data-parsley-trigger="change"#}
-{#                                                   pattern="^[\d\+\-\.\(\)\/\s]*$"#}
-{#                                                   required>#}
-{#                                        </div>#}
-{##}
-{#                                        <div class="checkbox">#}
-{#                                            <label class="checkbox checkbox-custom">#}
-{#                                                <input type="checkbox" name="agree" id="agree"#}
-{#                                                       data-parsley-trigger="change"#}
-{#                                                       required>#}
-{#                                                <i></i> I agree to the <a href class="text-info">Terms of Service</a>#}
-{#                                            </label>#}
-{#                                        </div>#}
-{# <input type="submit" class="btn btn-success" id="form1Submit">Next</input>#}
-{#                                <input type="submit" value="next">#}
                             <div class="row", align="center" style="align-content: center">
 <input type="submit" class="btn btn-success" id="form1Submit" value="Next"></input>
 </div>
@@ -131,8 +114,44 @@
 
       }
 
-
-
   } );
   </script>
+
+
+    <script type="text/javascript">
+            $(document).ready(function () {
+
+             });
+                function onAssociateChange() {
+                    {#                var x = document.getElementById("truck_id").value;#}
+                    var user_id = $('#truck').val();
+
+                    var relation = document.getElementById("truck_div");
+
+                    if(user_id !== "")
+                    {
+                        relation.style.visibility = 'hidden';
+                    }
+
+
+
+                }
+                function onDriverChange() {
+                    {#                var x = document.getElementById("truck_id").value;#}
+                    var user_id = $('#driver').val();
+
+                    var relation = document.getElementById("driver_div");
+
+                    if(user_id !== "")
+                    {
+                        relation.style.visibility = 'hidden';
+                    }
+
+
+
+                }
+
+
+        </script>
+
 {% endblock %}

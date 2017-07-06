@@ -72,7 +72,7 @@ def add_driver_one_process(request):
         fd2.write(chunk)
     fd2.close()
     if id == "":
-        new_date = datetime.strptime(date, '%m/%d/%Y').strftime('%Y-%m-%d')
+        new_date = datetime.strptime(date, '%d/%m/%Y').strftime('%Y-%m-%d')
 
         driver_obj = Driver_add.objects.create(licen_number=licen_number, driver_name=driver_name,
                                                date=new_date, licaen_type=licen_type, mobile_number=mobile_number,

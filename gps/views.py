@@ -24,11 +24,17 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.core.urlresolvers import reverse
+from django.template import Context
+from django.template.loader import get_template
+from xhtml2pdf import pisa# to convert html to pdf
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMessage
 import json,requests
 import time
 import threading
+from reportlab.pdfgen import canvas
+
 from driver.models import Driver_add
 from truck.models import Truck_data
 from gps.models import Aproved_mobile_number, GPS_status, RowData
@@ -76,6 +82,12 @@ def truck_mobile_number(request, number):
     return HttpResponse(data, content_type='application/javascript')
 
 def print_form(request):
+
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
+    p = canvas.Canvas(response)
+
     get_oerator = request.POST.get('operator')
     licen_id = request.POST.get('truck')
     licen_id2 = request.POST.get('driver')
@@ -93,11 +105,47 @@ def print_form(request):
         if truck_obj != None:
             print("in Truck")
             if get_oerator == "Airtel":
-                return render(request,'operator_forms/airtel_form.html',{'date': date, 'obj':truck_obj})
+                data = {'date': date, 'obj':truck_obj}
+                template = get_template('operator_forms/airtel_form.html')
+                html = template.render(Context(data))
+                file = open('test.pdf', "w+b")
+                pisaStatus = pisa.CreatePDF(html.encode('utf-8'), dest=file,
+                                            encoding='utf-8')
+                file.seek(0)
+                pdf = file.read()
+                file.close()
+                return HttpResponse(pdf, 'application/pdf')
+                # return render(request,'operator_forms/airtel_form.html',{'date': date, 'obj':truck_obj})
             elif get_oerator == "Vodafone":
-                return render(request,'operator_forms/vodaphone.html',{'date': date, 'obj':truck_obj})
+
+                data = {'date': date, 'obj':truck_obj}
+                template = get_template('operator_forms/vodaphone.html')
+                html = template.render(Context(data))
+
+                file = open('test.pdf', "w+b")
+                pisaStatus = pisa.CreatePDF(html.encode('utf-8'), dest=file,
+                                            encoding='utf-8')
+
+                file.seek(0)
+                pdf = file.read()
+                file.close()
+                return HttpResponse(pdf, 'application/pdf')
+                # return render(request,'operator_forms/vodaphone.html',{'date': date, 'obj':truck_obj})
             elif get_oerator == "Idea":
-                return render(request,'operator_forms/idea.html',{'date': date, 'obj':truck_obj})
+
+                data = {'date': date, 'obj':truck_obj}
+                template = get_template('operator_forms/idea.html')
+                html = template.render(Context(data))
+
+                file = open('test.pdf', "w+b")
+                pisaStatus = pisa.CreatePDF(html.encode('utf-8'), dest=file,
+                                            encoding='utf-8')
+
+                file.seek(0)
+                pdf = file.read()
+                file.close()
+                return HttpResponse(pdf, 'application/pdf')
+                # return render(request,'operator_forms/idea.html',{'date': date, 'obj':truck_obj})
 
     else:
         pass
@@ -110,11 +158,51 @@ def print_form(request):
             driver_obj == None
         if driver_obj != None:
             if get_oerator == "Airtel":
-                return render(request, 'operator_forms/airtel_form.html',{'date':date, 'obj':driver_obj})
+
+                data = {'date': date, 'obj':driver_obj}
+                template = get_template('operator_forms/airtel_form.html')
+                html = template.render(Context(data))
+
+                file = open('test.pdf', "w+b")
+                pisaStatus = pisa.CreatePDF(html.encode('utf-8'), dest=file,
+                                            encoding='utf-8')
+
+                file.seek(0)
+                pdf = file.read()
+                file.close()
+                return HttpResponse(pdf, 'application/pdf')
+                # return render(request, 'operator_forms/airtel_form.html',{'date':date, 'obj':driver_obj})
             elif get_oerator == "Vodafone":
-                return render(request, 'operator_forms/vodaphone.html', {'date': date, 'obj': driver_obj})
+
+                data = {'date': date, 'obj':driver_obj}
+                template = get_template('operator_forms/vodaphone.html')
+                html = template.render(Context(data))
+
+                file = open('test.pdf', "w+b")
+                pisaStatus = pisa.CreatePDF(html.encode('utf-8'), dest=file,
+                                            encoding='utf-8')
+
+                file.seek(0)
+                pdf = file.read()
+                file.close()
+                return HttpResponse(pdf, 'application/pdf')
+
+                # return render(request, 'operator_forms/vodaphone.html', {'date': date, 'obj': driver_obj})
             elif get_oerator == "Idea":
-                return render(request, 'operator_forms/idea.html', {'date': date, 'obj': driver_obj})
+
+                data = {'date': date, 'obj':driver_obj}
+                template = get_template('operator_forms/idea.html')
+                html = template.render(Context(data))
+
+                file = open('test.pdf', "w+b")
+                pisaStatus = pisa.CreatePDF(html.encode('utf-8'), dest=file,
+                                            encoding='utf-8')
+
+                file.seek(0)
+                pdf = file.read()
+                file.close()
+                return HttpResponse(pdf, 'application/pdf')
+                # return render(request, 'operator_forms/idea.html', {'date': date, 'obj': driver_obj})
 
 
             else:
@@ -127,8 +215,8 @@ def upload_scaned_documents(request):
     new_list = profile_for_all(request)
     driver = []
     truck = []
-    driver_obj = Driver_add.objects.all().values('mobile_number')
-    truck_obj = Truck_data.objects.all().values('mobile_number')
+    driver_obj = Driver_add.objects.all().values('mobile_number','driver_name')
+    truck_obj = Truck_data.objects.all().values('mobile_number','licanse_number')
     for i in driver_obj:
         print("@@@@@@", type(i))
         dic = i
@@ -274,14 +362,17 @@ def display_lat_long(request):
 def gps_lat_long(request):
     mobile_number = request.POST.get('search')
     print("--------------------", mobile_number)
-    row_mobile = RowData.objects.filter(mobile_number=mobile_number).values('lat', 'long')
+    # x= (RowData.objects.all().values('mobile_number'))
+    #    for i in :
+    #        print("--------------------",i)
+    row_mobile = RowData.objects.filter(mobile_number = mobile_number)
 
     print("----", row_mobile)
     if row_mobile.exists():
         main = []
         h = []
         g = []
-        row_data_obj = RowData.objects.all().values('lat', 'long')
+        row_data_obj = RowData.objects.filter(mobile_number = mobile_number).values('lat', 'long')
         print(row_data_obj)
         for i in row_data_obj:
             h.append(i['lat'])
