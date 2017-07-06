@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <style>
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 5px;
+    text-align: left;
+}
+</style>
+    <meta charset="UTF-8">
+    <title>Tata</title>
+</head>
+<body>
+<p align="center"><b>Template for Authorization by Subscriber</b></p><br>
+<p align="center"><b>AUTHORIZATION BY SUBSCRIBER</b></p><br>
+
+I hereby provide my wilful consent to ShipEasy Logistics Pvt Ltd and/or its<br>
+customer(s) allowing to track and access my cellular location information from Tata<br>
+Teleservices Ltd (TTL) .I shall have no objection and authorize Persistent & TTL to track my<br>
+cellular location. I completely exonerate TTL as well as Persistent from any claims due to<br>
+breach of privacy obligations by Persistent and/or its customer(s).<br>
+
+<table style="width:100%">
+  <tr>
+    <th>Sr.No</th>
+    <th>Name</th>
+      <th>Mobile Number</th>
+      <th>Service Type(GSM/CDMA)</th>
+      <th>Circle</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>{{ obj.owener_name }}{{ obj.driver_name }}</td>
+    <td>{{ obj.mobile_number }}</td>
+      <td> </td>
+      <td></td>
+  </tr>
+</table>
+</br>
+<b>Signature</b><br><br><br>
+
+<b>Name</b>{{ obj.owener_name }}{{ obj.driver_name }}<br>
+<b>Place</b><br>
+<b>Date</b>{{ date }}<br>
+</body>
+</html>
