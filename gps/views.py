@@ -116,7 +116,7 @@ def print_form(request):
                 file.close()
                 return HttpResponse(pdf, 'application/pdf')
                 # return render(request,'operator_forms/airtel_form.html',{'date': date, 'obj':truck_obj})
-            elif get_oerator == "Vodafone":
+            elif get_oerator == "Vodaphone":
 
                 data = {'date': date, 'obj':truck_obj}
                 template = get_template('operator_forms/vodaphone.html')
