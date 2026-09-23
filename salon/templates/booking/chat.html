@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Chat · {{ client }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1><a href="{% url 'client_detail' client.pk %}">{{ client }}</a> <span class="muted small">+{{ client.phone }}</span></h1>
+  <form method="post" action="{% url 'chat_handover' client.pk %}">{% csrf_token %}
+    {% if conversation.needs_staff %}
+      <span class="pill cancelled">Staff handling</span>
+      <button class="btn" name="needs_staff" value="0">Hand back to bot</button>
+    {% else %}
+      <span class="pill confirmed">Bot active</span>
+      <button class="btn" name="needs_staff" value="1">Take over chat</button>
+    {% endif %}
+  </form>
+</div>
+<section class="card chat">
+  <div id="thread" class="thread" data-src="{% url 'chat_messages' client.pk %}">{% include "booking/_messages.html" %}</div>
+  {% if not window_open %}
+  <p class="warn small">It has been more than 24h since this client last messaged. WhatsApp only delivers free-form replies inside that window; ask them to message you first or use an approved template.</p>
+  {% endif %}
+  <form method="post" class="reply">{% csrf_token %}
+    {{ form.body }}
+    <button class="btn primary">Send</button>
+  </form>
+</section>
+{% endblock %}
+{% block scripts %}
+<script>
+(function () {
+  const t = document.getElementById("thread");
+  const bottom = () => { t.scrollTop = t.scrollHeight; };
+  bottom();
+  setInterval(async () => {
+    const near = t.scrollHeight - t.scrollTop - t.clientHeight < 60;
+    const r = await fetch(t.dataset.src);
+    if (!r.ok) return;
+    t.innerHTML = await r.text();
+    if (near) bottom();
+  }, 8000);
+})();
+</script>
+{% endblock %}

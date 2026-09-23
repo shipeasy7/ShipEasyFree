@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Today{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>{{ today|date:"l, j F" }}</h1>
+  <a class="btn primary" href="{% url 'appointment_new' %}">+ New appointment</a>
+</div>
+<div class="stats">
+  <div class="stat"><span>{{ stats.today }}</span>appointments today</div>
+  <div class="stat"><span>{{ SALON_CURRENCY }}{{ stats.revenue|floatformat:"-2" }}</span>expected today</div>
+  <div class="stat"><span>{{ stats.week }}</span>booked next 7 days</div>
+  <div class="stat"><span>{{ stats.whatsapp_week }}</span>WhatsApp bookings this week</div>
+</div>
+{% if waiting %}
+<section class="card alert">
+  <h2>Clients waiting for a reply</h2>
+  <ul class="plain">{% for c in waiting %}<li><a href="{% url 'chat' c.client.pk %}">{{ c.client }}</a> <span class="muted">· {{ c.last_inbound_at|timesince }} ago</span></li>{% endfor %}</ul>
+</section>
+{% endif %}
+<section class="card">
+  <h2>Today's schedule</h2>
+  {% include "booking/_appointment_table.html" %}
+</section>
+{% if WHATSAPP_LINK %}
+<section class="card">
+  <h2>Let clients book on WhatsApp</h2>
+  <p>Share this link on Instagram, Google Maps or your shop window: <a href="{{ WHATSAPP_LINK }}" target="_blank" rel="noopener">{{ WHATSAPP_LINK }}</a></p>
+</section>
+{% endif %}
+{% endblock %}

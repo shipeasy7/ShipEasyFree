@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}WhatsApp inbox{% endblock %}
+{% block content %}
+<h1>WhatsApp inbox</h1>
+<section class="card">
+{% if clients %}
+<ul class="inbox">{% for c in clients %}
+  <li class="{% if c.unread %}unread{% endif %}">
+    <a href="{% url 'chat' c.pk %}">
+      <strong>{{ c }}</strong>
+      {% if c.conversation.needs_staff %}<span class="pill cancelled">Needs reply</span>{% endif %}
+      {% if c.unread %}<span class="badge">{{ c.unread }}</span>{% endif %}
+      <span class="muted small right">{{ c.last_message_at|timesince }} ago</span>
+    </a>
+  </li>{% endfor %}
+</ul>
+{% else %}
+<p class="empty">No WhatsApp conversations yet. Once your webhook is connected, client chats appear here.</p>
+{% endif %}
+</section>
+{% endblock %}

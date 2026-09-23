@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}{{ client }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>{{ client }}</h1>
+  <div>
+    <a class="btn" href="{% url 'chat' client.pk %}">WhatsApp chat</a>
+    <a class="btn" href="{% url 'client_edit' client.pk %}">Edit</a>
+    <a class="btn primary" href="{% url 'appointment_new' %}?client_phone={{ client.phone }}&client_name={{ client.name|urlencode }}">+ Book</a>
+  </div>
+</div>
+<section class="card">
+  <p><strong>WhatsApp:</strong> +{{ client.phone }} · <strong>Client since:</strong> {{ client.created_at|date:"j M Y" }}</p>
+  {% if client.notes %}<p class="notes">{{ client.notes|linebreaksbr }}</p>{% endif %}
+</section>
+<section class="card">
+  <h2>Appointments</h2>
+  {% if appointments %}
+  <div class="table-wrap"><table>
+    <thead><tr><th>When</th><th>Service</th><th>Stylist</th><th>Status</th><th></th></tr></thead>
+    <tbody>{% for appt in appointments %}
+      <tr><td>{{ appt.start|date:"D j M Y, h:i A" }}</td><td>{{ appt.service }}</td><td>{{ appt.stylist|default:"—" }}</td>
+      <td>{% include "booking/_status.html" %}</td><td class="actions"><a class="btn small" href="{% url 'appointment_edit' appt.pk %}">Edit</a></td></tr>
+    {% endfor %}</tbody>
+  </table></div>
+  {% else %}<p class="empty">No appointments yet.</p>{% endif %}
+</section>
+{% endblock %}

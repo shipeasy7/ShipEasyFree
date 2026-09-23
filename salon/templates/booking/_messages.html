@@ -1,0 +1,8 @@
+{% for m in chat_messages %}
+<div class="bubble {{ m.direction }}{% if m.sent_by_staff %} staff{% endif %}">
+  <div class="text">{{ m.body|linebreaksbr }}</div>
+  <div class="meta">{{ m.created_at|date:"j M, h:i A" }}{% if m.direction == "out" %} · {% if m.sent_by_staff %}staff{% else %}bot{% endif %}{% if m.status %} · {{ m.status }}{% endif %}{% endif %}</div>
+</div>
+{% empty %}
+<p class="empty">No messages yet.</p>
+{% endfor %}
