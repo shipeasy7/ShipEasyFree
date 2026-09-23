@@ -1,18 +1,20 @@
 {% extends "base.html" %}
 {% block title %}Stylists{% endblock %}
 {% block content %}
-<div class="page-head"><h1>Stylists</h1><a class="btn primary" href="{% url 'stylist_new' %}">+ New stylist</a></div>
+<div class="page-head"><h1>Stylists</h1>{% if IS_MANAGER %}<a class="btn primary" href="{% url 'stylist_new' %}">+ New stylist</a>{% endif %}</div>
 <section class="card">
 {% if stylists %}
 <div class="table-wrap"><table>
-  <thead><tr><th>Name</th><th>Phone</th><th>Services</th><th>Status</th><th></th></tr></thead>
+  <thead><tr><th>Name</th><th>WhatsApp</th><th>Services</th><th>Anchored clients</th><th>Chats</th><th>Login</th><th></th></tr></thead>
   <tbody>{% for s in stylists %}
     <tr class="{% if not s.active %}dim{% endif %}">
       <td><a href="{% url 'appointment_list' %}?stylist={{ s.pk }}">{{ s.name }}</a></td>
-      <td>{{ s.phone|default:"—" }}</td>
+      <td>{% if s.phone %}+{{ s.phone }}{% else %}—{% endif %}</td>
       <td>{{ s.services.all|join:", "|default:"—" }}</td>
-      <td>{% if s.active %}Active{% else %}Inactive{% endif %}</td>
-      <td class="actions"><a class="btn small" href="{% url 'stylist_edit' s.pk %}">Edit</a></td>
+      <td><a href="{% url 'client_list' %}?anchor={{ s.pk }}">{{ s.clients }}</a></td>
+      <td>{% if s.relay_whatsapp %}📱 forwarded to phone{% else %}web inbox{% endif %}</td>
+      <td>{{ s.user.username|default:"—" }}</td>
+      <td class="actions">{% if IS_MANAGER %}<a class="btn small" href="{% url 'stylist_edit' s.pk %}">Edit</a>{% endif %}</td>
     </tr>{% endfor %}
   </tbody>
 </table></div>

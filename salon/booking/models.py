@@ -1,6 +1,7 @@
 import re
 from datetime import timedelta
 
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
@@ -17,6 +18,26 @@ class Service(models.Model):
     duration_minutes = models.PositiveIntegerField(default=30)
     price = models.DecimalField(max_digits=8, decimal_places=2)
     active = models.BooleanField(default=True)
+    related_services = models.ManyToManyField(
+        "self",
+        symmetrical=False,
+        blank=True,
+        help_text="Add-ons to suggest alongside this service (cross-sell).",
+    )
+    upgrade = models.ForeignKey(
+        "self",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="upgrade_from",
+        verbose_name="premium upgrade",
+        help_text="A premium version to upsell to, e.g. Haircut → Signature cut & style.",
+    )
+    rebook_after_days = models.PositiveIntegerField(
+        null=True,
+        blank=True,
+        help_text="Typical days between visits for this service, e.g. 42 for colour. Used to flag clients who are due.",
+    )
 
     class Meta:
         ordering = ["name"]
@@ -31,15 +52,29 @@ class Service(models.Model):
 
 class Stylist(models.Model):
     name = models.CharField(max_length=100)
-    phone = models.CharField(max_length=20, blank=True)
+    phone = models.CharField(max_length=20, blank=True, help_text="WhatsApp number with country code")
     services = models.ManyToManyField(Service, related_name="stylists", blank=True)
     active = models.BooleanField(default=True)
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="stylist"
+    )
+    relay_whatsapp = models.BooleanField(
+        "Forward chats to my WhatsApp",
+        default=False,
+        help_text="Forward client chats to this stylist's own WhatsApp; their replies go back through the salon number.",
+    )
+    # Last time this stylist messaged the salon number (opens WhatsApp's 24h window for relays).
+    last_inbound_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         ordering = ["name"]
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        self.phone = normalize_phone(self.phone)
+        super().save(*args, **kwargs)
 
 
 class OpeningHours(models.Model):
@@ -75,6 +110,14 @@ class Client(models.Model):
     name = models.CharField(max_length=100, blank=True)
     phone = models.CharField(max_length=20, unique=True, help_text="With country code, e.g. 919812345678")
     notes = models.TextField(blank=True)
+    anchor_stylist = models.ForeignKey(
+        Stylist,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="anchored_clients",
+        help_text="The stylist who looks after this client. Chats and bookings go to them first.",
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -152,3 +195,59 @@ class Appointment(models.Model):
             ).exclude(pk=self.pk)
             if clash.exists():
                 raise ValidationError(f"{self.stylist} already has an appointment at that time.")
+
+
+def invoice_upload_path(instance, filename):
+    return f"invoices/{instance.client_id}/{filename}"
+
+
+class Invoice(models.Model):
+    SOURCE_IMPORT = "import"
+    SOURCE_MANUAL = "manual"
+    SOURCE_CHECKOUT = "checkout"
+    SOURCES = [(SOURCE_IMPORT, "Imported"), (SOURCE_MANUAL, "Added by hand"), (SOURCE_CHECKOUT, "Checkout")]
+
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name="invoices")
+    stylist = models.ForeignKey(Stylist, on_delete=models.SET_NULL, null=True, blank=True, related_name="invoices")
+    appointment = models.OneToOneField(
+        Appointment, on_delete=models.SET_NULL, null=True, blank=True, related_name="invoice"
+    )
+    number = models.CharField(max_length=50, blank=True)
+    date = models.DateField()
+    total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    file = models.FileField(upload_to=invoice_upload_path, blank=True, help_text="Scan or PDF of the original invoice")
+    source = models.CharField(max_length=20, choices=SOURCES, default=SOURCE_MANUAL)
+    notes = models.CharField(max_length=255, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-date", "-pk"]
+
+    def __str__(self):
+        return f"Invoice {self.number or self.pk} – {self.client} ({self.date:%d %b %Y})"
+
+    def recalculate_total(self):
+        self.total = sum(line.amount for line in self.lines.all())
+        self.save(update_fields=["total"])
+
+
+class InvoiceLine(models.Model):
+    invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, related_name="lines")
+    service = models.ForeignKey(Service, on_delete=models.SET_NULL, null=True, blank=True, related_name="invoice_lines")
+    description = models.CharField(max_length=150, blank=True)
+    quantity = models.PositiveIntegerField(default=1)
+    unit_price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    class Meta:
+        ordering = ["pk"]
+
+    def __str__(self):
+        return self.label
+
+    @property
+    def label(self):
+        return self.service.name if self.service else self.description
+
+    @property
+    def amount(self):
+        return self.unit_price * self.quantity

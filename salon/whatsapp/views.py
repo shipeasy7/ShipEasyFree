@@ -9,9 +9,9 @@ from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbid
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
-from booking.models import Client, normalize_phone
+from booking.models import Client, Stylist, normalize_phone
 
-from . import bot
+from . import bot, routing
 from .models import Message
 
 logger = logging.getLogger("whatsapp")
@@ -46,6 +46,12 @@ def _handle_inbound(msg, profile_names):
     phone = normalize_phone(msg.get("from"))
     if not phone:
         return
+    stylist = Stylist.objects.filter(phone=phone, active=True, relay_whatsapp=True).first()
+    if stylist is not None:
+        _, text, _ = _extract(msg)
+        routing.handle_staff_message(stylist, text, msg.get("context", {}).get("id", ""), msg.get("id"))
+        return
+
     client, created = Client.objects.get_or_create(phone=phone)
     if created and profile_names.get(phone):
         client.name = profile_names[phone][:100]
@@ -54,7 +60,7 @@ def _handle_inbound(msg, profile_names):
     shown, text, reply_id = _extract(msg)
     try:
         with transaction.atomic():
-            Message.objects.create(
+            message = Message.objects.create(
                 client=client,
                 direction=Message.INBOUND,
                 body=shown,
@@ -64,7 +70,7 @@ def _handle_inbound(msg, profile_names):
     except IntegrityError:
         return  # WhatsApp retried a message we've already handled.
 
-    bot.handle_message(client, text=text, reply_id=reply_id)
+    bot.handle_message(client, text=text, reply_id=reply_id, message=message)
 
 
 @csrf_exempt

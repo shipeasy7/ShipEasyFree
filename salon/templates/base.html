@@ -17,9 +17,12 @@
     <a href="{% url 'client_list' %}" class="{% if 'client' in request.resolver_match.url_name %}on{% endif %}">Clients</a>
     <a href="{% url 'service_list' %}" class="{% if 'service' in request.resolver_match.url_name %}on{% endif %}">Services</a>
     <a href="{% url 'stylist_list' %}" class="{% if 'stylist' in request.resolver_match.url_name %}on{% endif %}">Stylists</a>
+    {% if IS_MANAGER %}
     <a href="{% url 'opening_hours' %}" class="{% if request.resolver_match.url_name == 'opening_hours' %}on{% endif %}">Hours</a>
+    <a href="{% url 'invoice_import' %}" class="{% if request.resolver_match.url_name == 'invoice_import' %}on{% endif %}">Import</a>
+    {% endif %}
   </nav>
-  <form method="post" action="{% url 'logout' %}" class="logout">{% csrf_token %}<button class="link">Log out</button></form>
+  <form method="post" action="{% url 'logout' %}" class="logout">{% csrf_token %}<span class="muted small">{{ user.first_name|default:user.username }}</span> <button class="link">Log out</button></form>
 </header>
 {% if not WHATSAPP_LIVE %}
 <div class="banner">WhatsApp is in <strong>dry-run mode</strong>: messages are saved here but not sent. Set <code>WHATSAPP_TOKEN</code> and <code>WHATSAPP_PHONE_NUMBER_ID</code> to go live.</div>

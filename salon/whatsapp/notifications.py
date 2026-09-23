@@ -2,12 +2,9 @@
 from django.conf import settings
 from django.utils import timezone
 
+from booking.utils import money
+
 from . import client as wa
-
-
-def money(amount):
-    text = f"{amount:,.2f}"
-    return f"{settings.SALON_CURRENCY}{text[:-3] if text.endswith('.00') else text}"
 
 
 def when(appt):

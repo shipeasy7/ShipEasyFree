@@ -79,6 +79,8 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
+MEDIA_URL = "media/"
+MEDIA_ROOT = Path(os.environ.get("SALON_MEDIA_ROOT", BASE_DIR / "media"))
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -121,3 +123,6 @@ LOGGING = {
         "whatsapp": {"handlers": ["console"], "level": "WARNING" if "test" in sys.argv else "INFO"},
     },
 }
+# Approved template for alerting a stylist about a client chat when they haven't
+# messaged the salon number in 24h. Params: {{1}} client name, {{2}} message preview.
+WHATSAPP_STAFF_ALERT_TEMPLATE = os.environ.get("WHATSAPP_STAFF_ALERT_TEMPLATE", "")

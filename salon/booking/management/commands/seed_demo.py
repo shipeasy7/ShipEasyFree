@@ -17,18 +17,31 @@ class Command(BaseCommand):
                 defaults={"opens": time(10), "closes": time(20), "closed": weekday == 0},
             )
         services = {}
-        for name, minutes, price in [
-            ("Haircut", 30, "300"),
-            ("Hair colour", 90, "1500"),
-            ("Beard trim", 15, "150"),
-            ("Facial", 60, "900"),
-            ("Manicure", 45, "500"),
+        for name, minutes, price, rebook in [
+            ("Haircut", 30, "300", 35),
+            ("Hair colour", 90, "1500", 45),
+            ("Hair spa", 30, "600", None),
+            ("Beard trim", 15, "150", 14),
+            ("Facial", 60, "900", 30),
+            ("Manicure", 45, "500", 21),
+            ("Signature cut & style", 60, "800", 35),
         ]:
             services[name], _ = Service.objects.get_or_create(
-                name=name, defaults={"duration_minutes": minutes, "price": Decimal(price)}
+                name=name,
+                defaults={"duration_minutes": minutes, "price": Decimal(price), "rebook_after_days": rebook},
             )
+        # What to suggest alongside each service (cross-sell / upsell).
+        for name, extras in [
+            ("Haircut", ["Hair spa", "Beard trim"]),
+            ("Hair colour", ["Hair spa"]),
+            ("Facial", ["Manicure"]),
+        ]:
+            services[name].related_services.add(*[services[e] for e in extras])
+        # Premium versions to upsell to.
+        services["Haircut"].upgrade = services["Signature cut & style"]
+        services["Haircut"].save(update_fields=["upgrade"])
         for name, offers in [
-            ("Priya", ["Haircut", "Hair colour", "Facial"]),
+            ("Priya", ["Haircut", "Signature cut & style", "Hair colour", "Hair spa", "Facial"]),
             ("Rahul", ["Haircut", "Beard trim"]),
             ("Meera", ["Facial", "Manicure", "Hair colour"]),
         ]:

@@ -35,9 +35,29 @@ def _post(payload):
     return response.json()["messages"][0]["id"]
 
 
-def _send(client, payload, log_body, sent_by_staff=False):
+def send_to_number(phone, payload):
+    """Send to any number (e.g. a stylist's phone) without logging it in a client thread.
+
+    Returns the WhatsApp message id, "" in dry run, or None if sending failed.
+    """
+    if not is_configured():
+        logger.info("[dry run] to +%s: %s", phone, payload)
+        return ""
+    try:
+        return _post({"to": phone, **payload})
+    except (requests.RequestException, KeyError, IndexError, ValueError):
+        logger.exception("WhatsApp send to +%s failed", phone)
+        return None
+
+
+def _send(client, payload, log_body, sent_by_staff=False, staff=None, via_relay=False):
     message = Message.objects.create(
-        client=client, direction=Message.OUTBOUND, body=log_body, sent_by_staff=sent_by_staff
+        client=client,
+        direction=Message.OUTBOUND,
+        body=log_body,
+        sent_by_staff=sent_by_staff,
+        staff=staff,
+        via_relay=via_relay,
     )
     if not is_configured():
         logger.info("[dry run] to +%s: %s", client.phone, log_body)
@@ -58,11 +78,11 @@ def _clip(text, limit):
     return text if len(text) <= limit else text[: limit - 1] + "…"
 
 
-def send_text(client, body, sent_by_staff=False):
-    return _send(client, {"type": "text", "text": {"body": body}}, body, sent_by_staff)
+def send_text(client, body, sent_by_staff=False, staff=None, via_relay=False):
+    return _send(client, {"type": "text", "text": {"body": body}}, body, sent_by_staff, staff, via_relay)
 
 
-def send_buttons(client, body, buttons):
+def send_buttons(client, body, buttons, staff=None):
     """buttons: list of (id, title), at most 3."""
     buttons = buttons[:MAX_BUTTONS]
     payload = {
@@ -79,7 +99,7 @@ def send_buttons(client, body, buttons):
         },
     }
     log = body + "\n" + "  ".join(f"[{title}]" for _, title in buttons)
-    return _send(client, payload, log)
+    return _send(client, payload, log, sent_by_staff=staff is not None, staff=staff)
 
 
 def send_list(client, body, button_label, rows, section_title="Options"):
@@ -112,9 +132,8 @@ def send_list(client, body, button_label, rows, section_title="Options"):
     return _send(client, payload, log)
 
 
-def send_template(client, name, params, fallback_text):
-    """Send an approved template (needed outside the 24h customer-service window)."""
-    payload = {
+def template_payload(name, params):
+    return {
         "type": "template",
         "template": {
             "name": name,
@@ -124,4 +143,8 @@ def send_template(client, name, params, fallback_text):
             ],
         },
     }
-    return _send(client, payload, fallback_text)
+
+
+def send_template(client, name, params, fallback_text):
+    """Send an approved template (needed outside the 24h customer-service window)."""
+    return _send(client, template_payload(name, params), fallback_text)

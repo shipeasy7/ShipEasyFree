@@ -4,24 +4,24 @@ The WhatsApp booking assistant.
 Each incoming message is routed by the id of the button/list row the client tapped
 (`reply_id`) or, for typed text, by the step stored on their Conversation.
 """
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 from django.conf import settings
 from django.db import transaction
 from django.utils import timezone
 
-from booking.availability import available_slots, is_slot_free, open_days
+from booking.availability import available_slots, is_slot_free, open_days, opening_window
 from booking.models import Appointment, OpeningHours, Service, Stylist
 
 from . import client as wa
-from . import notifications
+from . import notifications, routing
 from .models import Conversation
 
 MENU_WORDS = {"hi", "hello", "hey", "menu", "start", "help", "0", "namaste"}
 PAGE_SIZE = 9  # leaves one list row for "More…"
 
 
-def handle_message(client, text="", reply_id=""):
+def handle_message(client, text="", reply_id="", message=None):
     conv, _ = Conversation.objects.get_or_create(client=client)
     conv.last_inbound_at = timezone.now()
     text = (text or "").strip()
@@ -33,9 +33,10 @@ def handle_message(client, text="", reply_id=""):
         conv.save()
         return main_menu(client, greeting=True)
 
-    if conv.needs_staff:
-        # A person is handling this chat; stay out of the way.
+    if conv.needs_staff and not reply_id:
+        # A person is handling this chat; stay out of the way and pass typed messages on.
         conv.save()
+        routing.relay_to_staff(conv, text or (message.body if message else ""), message)
         return None
 
     handler = ROUTES.get(reply_id.split(":", 1)[0]) if reply_id else None
@@ -72,10 +73,17 @@ def main_menu(client, greeting=True):
             ("book:", "Book appointment", "Pick a service, day and time"),
             ("mine:", "My appointments", "View or cancel bookings"),
             ("info:", "Services & prices", "Price list, hours and address"),
-            ("staff:", "Talk to the salon", "Chat with a team member"),
+            staff_row(client),
         ],
         section_title="Main menu",
     )
+
+
+def staff_row(client):
+    anchor = routing.anchor_for(client)
+    if anchor:
+        return ("staff:", f"Message {anchor.name}", "Your stylist – ask about services & add-ons")
+    return ("staff:", "Talk to the salon", "Chat with a team member")
 
 
 def start_booking(conv, _arg):
@@ -119,8 +127,13 @@ def pick_service(conv, service_id):
     stylists = list(Stylist.objects.filter(active=True, services=service))
     if len(stylists) == 1:
         return pick_stylist(conv, str(stylists[0].pk))
-    rows = [("sty:any", "No preference", "First available stylist")]
-    rows += [(f"sty:{s.pk}", s.name, "") for s in stylists[: wa.MAX_LIST_ROWS - 1]]
+    anchor = routing.anchor_for(conv.client)
+    rows = []
+    if anchor in stylists:
+        stylists.remove(anchor)
+        rows.append((f"sty:{anchor.pk}", f"{anchor.name} ⭐", "Your stylist"))
+    rows.append(("sty:any", "No preference", "First available stylist"))
+    rows += [(f"sty:{s.pk}", s.name, "") for s in stylists[: wa.MAX_LIST_ROWS - len(rows)]]
     return wa.send_list(conv.client, f"*{service.name}* — who would you like? 💇", "Stylists", rows)
 
 
@@ -222,7 +235,94 @@ def confirm(conv, answer):
         )
     conv.reset()
     conv.save()
-    return notifications.send_confirmation(appt)
+    notifications.send_confirmation(appt)
+    return offer_addons(conv, appt)
+
+
+def addon_candidates(appt):
+    return list(
+        appt.service.related_services.filter(active=True, stylists=appt.stylist).exclude(pk=appt.service_id)[:2]
+    )
+
+
+def offer_addons(conv, appt):
+    """Cross-sell: suggest services that go with what they just booked."""
+    addons = addon_candidates(appt)
+    if not addons:
+        return None
+    lines = "\n".join(
+        f"• {s.name} – {notifications.money(s.price)} (+{s.duration_minutes} min)" for s in addons
+    )
+    who = appt.stylist.name if appt.stylist else "We"
+    return wa.send_buttons(
+        conv.client,
+        f"✨ {who} recommends adding:\n{lines}\n\nWant to add one to your visit?",
+        [(f"addon:{appt.pk}.{s.pk}", f"Add {s.name}") for s in addons] + [("addon_no:", "No thanks")],
+    )
+
+
+def add_addon(conv, value):
+    """Book the add-on straight after the main appointment, or ask the stylist to fit it in."""
+    try:
+        appt_id, service_id = value.split(".")
+    except ValueError:
+        return main_menu(conv.client)
+    appt = _own_appointment(conv, appt_id)
+    service = Service.objects.filter(pk=service_id, active=True).first()
+    if appt is None or service is None:
+        return main_menu(conv.client)
+    stylist = appt.stylist
+    window = opening_window(timezone.localtime(appt.end).date())
+    fits_hours = window is not None and appt.end + service.duration <= window[1]
+    with transaction.atomic():
+        can_book = (
+            fits_hours
+            and stylist
+            and stylist.services.filter(pk=service.pk).exists()
+            and is_slot_free(service, appt.end, stylist)
+        )
+        if can_book:
+            addon = Appointment.objects.create(
+                client=conv.client,
+                service=service,
+                stylist=stylist,
+                start=appt.end,
+                source=Appointment.SOURCE_WHATSAPP,
+                notes=f"Add-on to {appt.service.name}",
+            )
+    if can_book:
+        return notifications.send_confirmation(addon)
+    appt.notes = (appt.notes + f" | Add-on requested: {service.name}").strip(" |")[:255]
+    appt.save(update_fields=["notes"])
+    routing.assign(conv, stylist)
+    routing.relay_to_staff(
+        conv, f"{conv.client} would like to add {service.name} to their {appt.service.name} on {notifications.when(appt)}."
+    )
+    name = stylist.name if stylist else "The team"
+    return wa.send_text(
+        conv.client, f"👍 Noted! {name} will confirm {service.name} with you here shortly."
+    )
+
+
+def decline_addon(conv, _arg):
+    return wa.send_text(conv.client, "No problem! See you soon 😊")
+
+
+def accept_offer(conv, service_id):
+    """Client tapped "Book it" on an offer a stylist sent from the dashboard."""
+    service = Service.objects.filter(pk=service_id, active=True).first()
+    if service is None:
+        return main_menu(conv.client)
+    if not conv.client.name:
+        return start_booking(conv, "")
+    conv.needs_staff = False
+    anchor = routing.anchor_for(conv.client)
+    if anchor and anchor.services.filter(pk=service.pk).exists():
+        conv.step = "stylist"
+        conv.data = {"service": service.pk}
+        conv.save()
+        return pick_stylist(conv, str(anchor.pk))
+    return pick_service(conv, str(service.pk))
 
 
 def my_appointments(conv, _arg):
@@ -285,11 +385,13 @@ def salon_info(conv, _arg):
 
 def talk_to_staff(conv, _arg):
     conv.reset()
-    conv.needs_staff = True
-    conv.save()
+    stylist = routing.assign(conv)
+    who = f"{stylist.name} will" if stylist else "A team member will"
+    routing.relay_to_staff(conv, f"{conv.client} would like to chat.")
     return wa.send_text(
         conv.client,
-        "👋 A team member will reply here shortly. Type your question below.\n"
+        f"👋 {who} reply here shortly. Type your question below – "
+        "you can ask about any service or add-on.\n"
         "(Type *menu* to go back to the booking assistant.)",
     )
 
@@ -308,4 +410,7 @@ ROUTES = {
     "cancel": cancel_appointment,
     "info": salon_info,
     "staff": talk_to_staff,
+    "addon": add_addon,
+    "addon_no": decline_addon,
+    "offer": accept_offer,
 }

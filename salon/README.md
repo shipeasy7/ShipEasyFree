@@ -17,12 +17,34 @@ not use unofficial WhatsApp Web automation, which can get numbers banned.
 - "Talk to the salon" hands the chat to a person. The bot stays quiet until staff hand it back or the client types *menu*
 - Confirmation, cancellation and reminder messages
 
+**Anchor stylists: one dedicated person per client**
+- Every client can have an **anchor stylist**. Imported clients get the stylist who served them most often
+- In WhatsApp the menu says *Message Priya* and the booking list shows *Priya ⭐ – your stylist* first. The front desk defaults to the anchor too
+- After booking, the bot offers add-ons that go with the service (*"Priya recommends adding Hair spa"*). One tap books it straight after the main appointment. If it doesn't fit, the request goes to the stylist to arrange
+
+**Routing WhatsApp chats to staff, one thread per client**
+- *Message my stylist* routes the chat to the anchor stylist. Staff can re-route a chat to anyone, or back to the front desk
+- Stylists with **"Forward chats to my WhatsApp"** get client messages on their own phone, from the salon number. They swipe-reply to answer, and the reply reaches the client from the salon number. Commands: `#who`, `#done` (hand back to the bot), `#help`
+- Every message (bot, front desk, or stylist from the web or their phone) is stored in the client's thread, labelled with who sent it
+- Stylists can have their own login. They see their own clients, chats and schedule; managers see everything
+
+**Past invoices → charge and upsell prompts**
+- Import past invoices from CSV (Excel or any billing system), or add one by hand with a scan/PDF attached
+- The schedule and **Checkout** screen show what the client paid last time vs today's list price (*"Last charged ₹280 on 1 Aug; list price is now ₹300. Mention the new price."*)
+- Suggestions, labelled by type:
+  - **Due**: services they buy regularly and are due for, based on their own visit rhythm (or the service's rebook interval)
+  - **Cross-sell**: add-ons set on the service, plus services other clients often buy together (learned from invoices)
+  - **Upsell**: the service's premium upgrade
+- Checkout: tick suggested add-ons, adjust prices, charge. This records an invoice, so the history keeps growing
+- **Offer on WhatsApp** sends the client a one-tap *Book it* offer, which opens booking with their stylist preselected
+- Client page: lifetime spend, average bill, price history per service, all invoices
+
 **For staff, in the browser**
 - Today view: schedule, expected takings, WhatsApp bookings, clients waiting for a reply
 - Appointment diary by day and stylist; create or edit bookings with a free-slot picker; mark as done, no-show or cancelled (cancelling notifies the client)
 - Client list with visit history and notes
 - WhatsApp inbox: every conversation, bot and staff messages, live refresh, reply box, "take over" and "hand back to bot"
-- Manage services and prices, stylists and the services each offers, and opening hours
+- Manage services and prices (with cross-sell add-ons, premium upgrade and rebook interval), stylists (services, login, WhatsApp forwarding), and opening hours
 - Django admin at `/admin/`
 
 ## Quick start
@@ -63,6 +85,7 @@ Run the tests with `python manage.py test`.
 | `WHATSAPP_APP_SECRET` | App secret; when set, webhook signatures are verified (recommended) |
 | `WHATSAPP_PUBLIC_NUMBER` | Your WhatsApp number, digits only (e.g. `919812345678`), for the shareable `wa.me` booking link |
 | `WHATSAPP_REMINDER_TEMPLATE` | Name of an approved template for reminders (see below) |
+| `WHATSAPP_STAFF_ALERT_TEMPLATE` | Approved template for alerting a stylist outside the 24h window |
 | `WHATSAPP_TEMPLATE_LANGUAGE` | Template language code, default `en` |
 
 ### Reminders and the 24-hour window
@@ -81,6 +104,39 @@ Set `WHATSAPP_REMINDER_TEMPLATE` to its name, and run reminders from cron:
 
 Each appointment gets one reminder when it is within `SALON_REMINDER_LEAD_HOURS` (default 24 hours).
 
+## Importing past invoices
+
+*Import* (manager login) takes a CSV with **one row per service** on each invoice:
+
+```csv
+invoice,date,phone,name,service,price,quantity,stylist
+INV-1001,2026-05-10,919812345678,Asha,Haircut,250,1,Priya
+INV-1001,2026-05-10,919812345678,Asha,Hair colour,1300,1,Priya
+```
+
+Required: `date`, `phone`, `service`, `price`. Common alternatives (`Mobile`, `Bill No`, `Amount`, `Staff`, …) and
+date formats (`2026-05-10`, `10/05/2026`, `10-May-2026`) are recognised. Rows sharing an invoice number
+become one invoice, and re-importing a file skips invoices already imported. Services not in the catalogue are
+kept as text; add a service with the same name later and past lines link to it. See `sample_invoices.csv`.
+
+Scanned or PDF invoices can be attached per client (*+ Past invoice*). They are stored under `SALON_MEDIA_ROOT`
+and only served to logged-in staff who can see that client.
+
+## Stylists on their own WhatsApp
+
+1. Edit the stylist: add their WhatsApp number and tick **Forward chats to my WhatsApp**.
+2. Ask them to save the salon number and send it any message (e.g. `#help`). This opens WhatsApp's 24-hour window.
+3. When a client chats, the stylist gets `💬 Asha (+91…): message`. They **swipe-reply** to answer that client. A plain
+   message goes to the client they were last talking to.
+
+WhatsApp only delivers free-form messages to a stylist who has messaged the salon number in the last 24 hours.
+To reach them outside that window, create a Utility template with two variables (client name, message preview),
+for example *"{{1}} is waiting for you on WhatsApp: {{2}}. Reply here to answer."*, and set
+`WHATSAPP_STAFF_ALERT_TEMPLATE` to its name.
+
+A stylist's number that has forwarding turned on is treated as staff, not as a client. They should book their own
+appointments through the front desk.
+
 ## Other settings
 
 | Variable | Default |
@@ -97,13 +153,17 @@ Each appointment gets one reminder when it is within `SALON_REMINDER_LEAD_HOURS`
 | `DJANGO_ALLOWED_HOSTS` | `localhost,127.0.0.1` |
 | `DJANGO_CSRF_TRUSTED_ORIGINS` | e.g. `https://your-domain` |
 | `SALON_DB_PATH` | `salon/salon.sqlite3` |
+| `SALON_MEDIA_ROOT` | `salon/media` (uploaded invoice scans) |
 
 ## Layout
 
 ```
 salon/
-  booking/     models (Service, Stylist, OpeningHours, Client, Appointment), slot availability, dashboard views
+  booking/     models, slot availability, dashboard views
+    insights.py         price history, charge prompts, due / cross-sell / upsell suggestions
+    invoice_import.py   CSV import of past invoices
   whatsapp/    Cloud API client, webhook, booking bot, notification messages, inbox models
+    routing.py          anchor routing, relay to stylists' own WhatsApp, staff visibility
   templates/   dashboard HTML
   static/      stylesheet
 ```

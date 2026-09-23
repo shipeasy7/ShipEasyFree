@@ -193,6 +193,7 @@ class ApiClientTests(TestCase):
         import requests
 
         client = Client.objects.create(phone=PHONE)
-        with mock.patch("whatsapp.client.requests.post", side_effect=requests.ConnectionError("down")):
+        with mock.patch("whatsapp.client.requests.post", side_effect=requests.ConnectionError("down")), \
+                self.assertLogs("whatsapp", "ERROR"):
             msg = wa.send_text(client, "hello")
         self.assertEqual(msg.status, "failed")
