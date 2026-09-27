@@ -8,9 +8,12 @@ from booking.models import OpeningHours, Service, Stylist
 
 
 class Command(BaseCommand):
-    help = "Create sample services, stylists, opening hours and an admin/admin login for trying the app."
+    help = "Create sample services, stylists and opening hours (and an admin/admin login, locally) for trying the app."
 
-    def handle(self, *args, **options):
+    def add_arguments(self, parser):
+        parser.add_argument("--no-admin", action="store_true", help="Don't create the admin/admin login.")
+
+    def handle(self, *args, no_admin=False, **options):
         for weekday in range(7):
             OpeningHours.objects.update_or_create(
                 weekday=weekday,
@@ -49,7 +52,7 @@ class Command(BaseCommand):
             stylist.services.set([services[s] for s in offers])
 
         User = get_user_model()
-        if not User.objects.filter(username="admin").exists():
+        if not no_admin and not User.objects.filter(username="admin").exists():
             User.objects.create_superuser("admin", "", "admin")
             self.stdout.write("Created login admin / admin — change this password before going live.")
         self.stdout.write(self.style.SUCCESS("Demo data ready."))

@@ -66,6 +66,40 @@ payloads to `/whatsapp/webhook/`; see `whatsapp/tests.py` for examples.
 
 Run the tests with `python manage.py test`.
 
+## Deploying to Render (shareable test URL)
+
+The repo includes a Render Blueprint (`render.yaml` at the repo root). It creates the web app and a Postgres
+database on Render's free plan.
+
+1. Sign up at [render.com](https://render.com) with your GitHub account.
+2. **New → Blueprint**, pick the `ShipEasyFree` repository and the branch to deploy.
+3. Render asks for the values marked "you type this in":
+   - `DJANGO_ADMIN_PASSWORD`: the password for the `admin` manager login. Choose a strong one.
+   - `WHATSAPP_*`: leave blank for now (the app runs in dry-run mode); fill them in later under the service's
+     **Environment** tab.
+4. Click **Apply**. The first deploy takes a few minutes. Your URL is shown at the top of the service page, e.g.
+   `https://salon-xxxx.onrender.com`.
+5. Log in as `admin` with the password you chose. Sample services, stylists and hours are loaded
+   (`SALON_SEED_DEMO=true`). Try *Import* with `salon/sample_invoices.csv`.
+
+Then point Meta's webhook at `https://<your-url>/whatsapp/webhook/`. The verify token is the generated
+`WHATSAPP_VERIFY_TOKEN` value on the **Environment** tab.
+
+Free plan limits, fine for testing but not for running the salon:
+- The app sleeps after 15 minutes idle, so the first request after that takes about a minute. WhatsApp retries
+  webhooks, so messages still arrive, just late.
+- The free Postgres database expires after 30 days.
+- Uploaded invoice scans are lost on each redeploy. Add a Render persistent disk mounted at `SALON_MEDIA_ROOT`,
+  or use object storage, for real use.
+- Reminders need `python manage.py send_reminders` on a schedule (a Render Cron Job, paid).
+
+For production, move the web service and database to paid plans and set `SALON_SEED_DEMO=false` before you
+enter real data.
+
+Other hosts work the same way: run `build.sh`, start `gunicorn salon_project.wsgi:application`, and set
+`DATABASE_URL`, `DJANGO_SECRET_KEY`, `DJANGO_DEBUG=false`, `DJANGO_ALLOWED_HOSTS`,
+`DJANGO_CSRF_TRUSTED_ORIGINS`, `DJANGO_ADMIN_USERNAME` and `DJANGO_ADMIN_PASSWORD`.
+
 ## Connecting WhatsApp
 
 1. At [developers.facebook.com](https://developers.facebook.com/), create an app of type **Business** and add the **WhatsApp** product.
@@ -152,7 +186,10 @@ appointments through the front desk.
 | `DJANGO_DEBUG` | `true`. Set to `false` in production |
 | `DJANGO_ALLOWED_HOSTS` | `localhost,127.0.0.1` |
 | `DJANGO_CSRF_TRUSTED_ORIGINS` | e.g. `https://your-domain` |
-| `SALON_DB_PATH` | `salon/salon.sqlite3` |
+| `DATABASE_URL` | *(unset: local SQLite)*, e.g. `postgres://user:pass@host/db` |
+| `SALON_DB_PATH` | `salon/salon.sqlite3` (when `DATABASE_URL` is unset) |
+| `DJANGO_ADMIN_USERNAME` / `DJANGO_ADMIN_PASSWORD` | Manager login created or updated by `build.sh` |
+| `SALON_SEED_DEMO` | `false`. `true` loads sample services, stylists and hours on deploy |
 | `SALON_MEDIA_ROOT` | `salon/media` (uploaded invoice scans) |
 
 ## Layout
